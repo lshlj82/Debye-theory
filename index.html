@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Debye Theory of Solids, Interactively</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EDF1F4; --surface:#F8FAFC; --ink:#15202B; --muted:#56636F; --rule:#C5CFD7; --band:#E2E8ED;
+  --debye:#167A8B; --einstein:#B5731A; --approx:#2E7A57; --res:#8B98A4; --magnon:#7B3FB0; --warn:#C0392B;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E151C; --surface:#141D26; --ink:#E3E9EE; --muted:#97A4B0; --rule:#2B3743; --band:#1B2631;
+    --debye:#4FC3D5; --einstein:#E8B04F; --approx:#5CC593; --res:#5B6976; --magnon:#B98CF0; --warn:#FF7A66;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E151C; --surface:#141D26; --ink:#E3E9EE; --muted:#97A4B0; --rule:#2B3743; --band:#1B2631;
+  --debye:#4FC3D5; --einstein:#E8B04F; --approx:#5CC593; --res:#5B6976; --magnon:#B98CF0; --warn:#FF7A66;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:1.1rem;line-height:1.62;-webkit-font-smoothing:antialiased}
+img,canvas{max-width:100%}
+a{color:var(--debye)}
+:focus-visible{outline:2px solid var(--debye);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.prose{max-width:40rem}
+
+header.hero{padding:clamp(2.5rem,7vw,5rem) 0 1.5rem}
+.credit{font-family:var(--sans);font-size:.9rem;color:var(--muted);margin:0 0 1.25rem}
+h1{font-weight:500;font-size:clamp(2.5rem,7.5vw,5.25rem);line-height:.98;letter-spacing:-.025em;margin:0 0 1.25rem;max-width:12ch}
+.lede{font-size:clamp(1.15rem,2.2vw,1.35rem);max-width:37rem;margin:0}
+
+section{padding:clamp(2.5rem,6vw,4rem) 0;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0;padding-top:1rem}
+h2{font-weight:500;font-size:clamp(1.7rem,3.5vw,2.35rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 1rem}
+h3{font-family:var(--sans);font-weight:600;font-size:1rem;margin:1.75rem 0 .5rem}
+p{margin:0 0 1rem}
+.note{font-size:.95rem;color:var(--muted)}
+
+.eq{display:block;text-align:center;margin:1.25rem 0;overflow-x:auto;overflow-y:hidden;padding:.25rem 0}
+mjx-container{color:inherit}
+mjx-container[display="true"]{margin:0 !important}
+.stats mjx-container,.legend mjx-container,.cap mjx-container,.ctl small mjx-container{font-size:105%}
+.ctl output mjx-container{font-size:95%}
+.boxed{display:inline-block;border:1.5px solid var(--debye);padding:.5rem 1rem;border-radius:3px}
+
+.fig{display:grid;grid-template-columns:minmax(0,1fr) 17.5rem;gap:1.5rem;align-items:start;margin-top:1.5rem}
+@media (max-width:820px){.fig{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:1rem}
+.canvas-holder{background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+canvas{display:block;width:100%}
+
+.ctl{font-family:var(--sans);font-size:.9rem;margin-bottom:1.1rem}
+.ctl:last-child{margin-bottom:0}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;font-weight:500;margin-bottom:.3rem}
+.ctl .lt{flex:1 1 auto}
+.ctl output{flex:0 0 auto;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:400}
+.ctl small{display:block;color:var(--muted);line-height:1.4;margin-top:.25rem}
+input[type=range]{width:100%;accent-color:var(--debye);margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:.5rem}
+button{font-family:var(--sans);font-size:.88rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:4px;padding:.45rem .8rem;cursor:pointer}
+button:hover{border-color:var(--ink)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.check{display:flex;align-items:center;gap:.5rem;font-weight:500;cursor:pointer}
+.check input{width:1rem;height:1rem;margin:0;accent-color:var(--debye)}
+
+.stats{font-family:var(--sans);font-size:.9rem;display:grid;grid-template-columns:auto auto;gap:.35rem 1rem;margin:0}
+.stats dt{color:var(--muted)}
+.stats dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.stats .sep{grid-column:1/-1;border-top:1px solid var(--rule);margin:.3rem 0}
+.legend{font-family:var(--sans);font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:1rem;margin:.6rem 0 0;align-items:center}
+.swatch{display:inline-block;width:.75rem;height:.75rem;border-radius:2px;vertical-align:-1px;margin-right:.35rem}
+.swatch.line{height:3px;width:1.1rem;vertical-align:3px;border-radius:0}
+.swatch.dash{height:0;width:1.1rem;vertical-align:3px;border-radius:0;border-top:3px dashed}
+.swatch.dot{border-radius:50%}
+.cap{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.5rem .25rem 0}
+.verdict{font-family:var(--sans);font-size:1rem;font-weight:500;margin:.85rem 0 0;max-width:40rem}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--rule);padding:2rem 0 3rem;font-family:var(--sans);font-size:.9rem;color:var(--muted)}
+footer p{margin:0 0 .4rem}
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false }
+};
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="credit">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.5, Debye Theory of Solids)</p>
+  <h1>Debye Theory of Solids</h1>
+  <p class="lede">The atoms of a crystal don’t vibrate independently: they move together in sound waves, and the quanta of those waves, phonons, are bosons just like photons. Treating them that way explains why the heat capacity of every solid falls as \(T^3\) at low temperature.</p>
+</header>
+
+<!-- ============ EINSTEIN ============ -->
+<section id="einstein" aria-labelledby="h-einstein">
+  <h2 id="h-einstein">Where the Einstein model fails</h2>
+  <div class="prose">
+    <p>The Einstein model treats a solid as a collection of independent quantum harmonic oscillators, each storing energy in units of \(\varepsilon = hf\) (with \(E_n = (n+\tfrac12)\hbar\omega\)). One oscillator has \(Z = 1/(1 - e^{-\beta hf})\) and \(\bar{E} = hf/(e^{\beta hf}-1)\). For \(N\) atoms vibrating in three dimensions, \(N \to 3N\), and</p>
+    <div class="eq">\[ C_V = 3Nk_{\mathrm{B}}\,\frac{\left(\varepsilon/k_{\mathrm{B}}T\right)^2 e^{\varepsilon/k_{\mathrm{B}}T}}{\left(e^{\varepsilon/k_{\mathrm{B}}T} - 1\right)^2} \]</div>
+    <p>At high temperature this gives \(C_V \to 3Nk_{\mathrm{B}}\), the equipartition result. But as \(T \to 0\) it predicts \(C_V \propto e^{-\varepsilon/k_{\mathrm{B}}T}/T^2\), falling exponentially, whereas experiments find \(C_V \propto T^3\). The problem is that atoms in a crystal do not vibrate independently. Low-frequency modes, in which large groups of atoms move together, carry small energy units and stay active at very low temperatures, long after the high-frequency modes are frozen out.</p>
+  </div>
+</section>
+
+<!-- ============ CHAIN ============ -->
+<section id="chain" aria-labelledby="h-chain">
+  <h2 id="h-chain">Sound waves in a crystal</h2>
+  <div class="prose">
+    <p>The modes of a crystal are much like those of the electromagnetic field, with three differences. Sound waves travel at the speed of sound \(c_s\) (taken as constant), they have three polarizations (two transverse, one longitudinal: S-waves and P-waves in seismology), and they cannot have wavelengths shorter than twice the atomic spacing. Each bump must contain at least one atom. Try it on a row of 12 atoms with fixed ends.</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="chainCanvas" aria-label="A row of atoms vibrating in a standing-wave mode"></canvas></div>
+      <p class="verdict" id="chainVerdict"></p>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="modeN"><span class="lt">Mode number \(n\)</span> <output id="modeNOut"></output></label>
+        <input type="range" id="modeN" min="1" max="24" step="1" value="2">
+        <small>With 12 atoms there are only 12 distinct modes. Push past 12 to see why.</small>
+      </div>
+      <div class="ctl btns"><button type="button" id="chainPlay">Pause</button></div>
+      <dl class="stats">
+        <dt>Wavelength \(\lambda = 2L/n\)</dt><dd id="chainLam">–</dd>
+        <dt>Energy unit \(\varepsilon = hc_s n/2L\)</dt><dd id="chainE">–</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="prose" style="margin-top:1.5rem">
+    <p>Each mode has equally spaced energy levels with unit \(\varepsilon = hf = hc_s/\lambda = hc_s n/2L\), where \(L\) is the length of the crystal; in three dimensions \(n\) becomes a vector \(\vec{n}\). In equilibrium the average number of units is the Planck distribution, \(\bar{n}_{\mathrm{Pl}} = 1/(e^{\varepsilon/k_{\mathrm{B}}T} - 1)\): just as for photons with \(c \to c_s\). These quanta are called <strong>phonons</strong>, bosons with \(\mu = 0\). The total thermal energy is</p>
+    <div class="eq">\[ U = 3\sum_{n_x}\sum_{n_y}\sum_{n_z} \varepsilon\,\bar{n}_{\mathrm{Pl}}(\varepsilon) \]</div>
+    <p>with the 3 counting polarizations. Unlike photons, though, not every \(\vec{n}\) is allowed.</p>
+  </div>
+</section>
+
+<!-- ============ DEBYE SPHERE ============ -->
+<section id="sphere" aria-labelledby="h-sphere">
+  <h2 id="h-sphere">Debye’s spherical cow</h2>
+  <div class="prose">
+    <p>Since \(n\) can’t exceed the number of atoms in a row, \(N^{1/3}\), the real sum runs over a cube in \(n\)-space, \([1, N^{1/3}]^3\). Peter Debye’s clever idea was to pretend instead that the relevant region is an eighth of a sphere with the same total volume \(N\):</p>
+    <div class="eq">\[ \frac18\cdot\frac43\pi n_{\max}^3 = N \quad\Longrightarrow\quad n_{\max} = \left(\frac{6N}{\pi}\right)^{1/3} \]</div>
+    <p>This is exact in both limits. At high \(T\), all that matters is the total number of modes, which the sphere preserves. At low \(T\), modes with large \(\vec{n}\) are frozen out anyway, so it doesn’t matter how we count them. The picture shows a cube of \(8^3\) modes; brightness shows how active each mode is (its contribution to \(C_V\)).</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="sphCanvas" tabindex="0" style="touch-action:none" aria-label="The cube of real modes in n-space and Debye's eighth-sphere of equal volume. Drag or use the arrow keys to rotate."></canvas></div>
+      <div class="legend">
+        <span><span class="swatch dot" style="background:var(--debye)"></span>In both the cube and the sphere</span>
+        <span><span class="swatch dot" style="background:var(--warn)"></span>Real, but left out of the sphere</span>
+        <span><span class="swatch dot" style="background:var(--approx)"></span>Added by the sphere</span>
+      </div>
+      <p class="cap">Drag to rotate, or focus the picture and use the arrow keys. Faded points are frozen out.</p>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="sphT"><span class="lt">\(T/T_D\)</span> <output id="sphTOut"></output></label>
+        <input type="range" id="sphT" min="-1.7" max="0.3" step="0.01" value="-0.7">
+      </div>
+      <div class="ctl btns"><button type="button" id="sphSpin">Pause rotation</button></div>
+      <dl class="stats">
+        <dt>\(C_V/3Nk_{\mathrm{B}}\), real cube</dt><dd id="sphCube">–</dd>
+        <dt>\(C_V/3Nk_{\mathrm{B}}\), Debye sphere</dt><dd id="sphSph">–</dd>
+        <dt>Difference</dt><dd id="sphDiff">–</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">Both regions are treated as continua, as for a macroscopic crystal, so the difference comes only from the shape. It vanishes at low \(T\), is small at high \(T\), and peaks at a few percent near \(T \approx 0.25\,T_D\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEBYE RESULT ============ -->
+<section id="debye" aria-labelledby="h-debye">
+  <h2 id="h-debye">The Debye heat capacity</h2>
+  <div class="prose">
+    <p>Integrating over the eighth-sphere with \(x = hc_s n/2Lk_{\mathrm{B}}T\), the upper limit becomes \(x_{\max} = T_D/T\), where</p>
+    <div class="eq"><span class="boxed">\( \displaystyle T_D = \frac{hc_s}{2Lk_{\mathrm{B}}}\left(\frac{6N}{\pi}\right)^{1/3} = \frac{hc_s}{2k_{\mathrm{B}}}\left(\frac{6N}{\pi V}\right)^{1/3} \)</span></div>
+    <p>is the Debye temperature. Then</p>
+    <div class="eq">\[ U = \frac{9Nk_{\mathrm{B}}T^4}{T_D^3}\int_0^{T_D/T}\frac{x^3}{e^x - 1}\,dx, \qquad C_V = 9Nk_{\mathrm{B}}\left(\frac{T}{T_D}\right)^3\int_0^{T_D/T}\frac{x^4 e^x}{(e^x-1)^2}\,dx \]</div>
+    <p>For \(T \gg T_D\), \(x\) is always small, \(\int x^3/(e^x-1)\,dx \approx \int x^2\,dx\), and \(U \approx 3Nk_{\mathrm{B}}T\), in agreement with equipartition and with the Einstein model. For \(T \ll T_D\), the upper limit can go to infinity, \(\int_0^\infty x^3/(e^x-1)\,dx = \pi^4/15\) as for the photon gas, and</p>
+    <div class="eq"><span class="boxed">\( \displaystyle U \approx \frac{3\pi^4}{5}\frac{Nk_{\mathrm{B}}T^4}{T_D^3}, \qquad C_V \approx \frac{12\pi^4}{5}\left(\frac{T}{T_D}\right)^3 Nk_{\mathrm{B}} \)</span></div>
+    <p>The \(T^3\) law agrees beautifully with low-temperature experiments on almost any solid. In between, the integral is done numerically.</p>
+  </div>
+
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="cvCanvas" aria-label="Heat capacity versus temperature for the Debye and Einstein models"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--debye)"></span>Debye</span>
+        <span><span class="swatch dash" style="border-color:var(--einstein)"></span>Einstein, with \(\varepsilon\) matched at high \(T\)</span>
+        <span><span class="swatch dash" style="border-color:var(--approx)"></span>Low-\(T\) law, \(\propto T^3\)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl"><label class="check" for="logCv"><input type="checkbox" id="logCv"> Logarithmic axes</label></div>
+      <div class="ctl btns" role="group" aria-label="Materials" id="matBtns"></div>
+      <div class="ctl">
+        <label for="matT"><span class="lt">Temperature \(T\)</span> <output id="matTOut"></output></label>
+        <input type="range" id="matT" min="0" max="3.5" step="0.005" value="2.477">
+      </div>
+      <dl class="stats">
+        <dt>Debye temperature \(T_D\)</dt><dd id="mTD">–</dd>
+        <dt>\(T/T_D\)</dt><dd id="mRatio">–</dd>
+        <dt>Molar \(C_V\), Debye</dt><dd id="mC">–</dd>
+        <dt>Low-\(T\) law</dt><dd id="mC3">–</dd>
+        <dt>Equipartition, \(3R\)</dt><dd>24.9 J/(mol·K)</dd>
+      </dl>
+    </div>
+  </div>
+  <p class="prose note" style="margin-top:1.25rem">In the Einstein curve, \(\varepsilon\) is chosen so the two models agree at high temperature, which puts \(\varepsilon/k_{\mathrm{B}} = \sqrt{3/5}\,T_D \approx 0.77\,T_D\). Note how much flatter the Einstein curve is at low temperature, especially on logarithmic axes. Since \(C_V\) reaches 95% of its maximum at \(T = T_D\), the Debye temperature tells you roughly when equipartition is good enough. Typical values range from 88 K for lead (soft and dense) to 1860 K for diamond (stiff and light); the others shown are typical handbook values. In practice \(T_D\) is usually chosen to fit measured heat capacities rather than computed from \(c_s\).</p>
+</section>
+
+<!-- ============ METALS ============ -->
+<section id="metals" aria-labelledby="h-metals">
+  <h2 id="h-metals">Metals: electrons plus phonons</h2>
+  <div class="prose">
+    <p>In a metal, the conduction electrons add their own heat capacity, linear in \(T\) (Section 7.3): \(C_{\text{el}} = \frac{\pi^2}{2}\frac{Nk_{\mathrm{B}}^2}{\varepsilon_F}T\). At low temperature,</p>
+    <div class="eq"><span class="boxed">\( \displaystyle C = \gamma T + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^3 \quad\Longrightarrow\quad \frac{C}{T} = \gamma + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^2 \)</span></div>
+    <p>so a plot of \(C/T\) against \(T^2\) is a straight line: the intercept is the electronic coefficient \(\gamma\), and the slope gives \(T_D\).</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="ctCanvas" aria-label="C over T versus T squared for gold, silver and copper"></canvas></div>
+      <p class="cap">Lines use typical measured values of \(\gamma\) and \(T_D\), per mole. Intercept: electrons. Slope: phonons.</p>
+    </div>
+    <div class="panel">
+      <div class="ctl btns" role="group" aria-label="Metal" id="metBtns"></div>
+      <dl class="stats">
+        <dt>\(\gamma\), measured</dt><dd id="gM">–</dd>
+        <dt>\(\gamma\), free electrons</dt><dd id="gF">–</dd>
+        <dt>Slope (phonons)</dt><dd id="gB">–</dd>
+        <dt>\(T_D\)</dt><dd id="gTD">–</dd>
+        <dt class="sep"></dt>
+        <dt>Electrons = phonons at</dt><dd id="gX">–</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">Below that temperature the electrons dominate, above it the phonons. The free-electron \(\gamma\) uses \(\varepsilon_F\) from the free-electron model; the real value is somewhat larger.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAGNONS ============ -->
+<section id="magnons" aria-labelledby="h-magnons">
+  <h2 id="h-magnons">Magnons in a ferromagnet</h2>
+  <div class="prose">
+    <p>Problem 7.64. In a ferromagnet such as iron, each elementary dipole strongly prefers to align with its neighbors. At \(T = 0\) all are lined up and the magnetization is about \(2\mu_B N\). At somewhat higher temperatures the excitations are <strong>spin waves</strong>, in which the dipoles precess in cones with a phase that advances along the crystal. Their quanta, <strong>magnons</strong>, each reduce the magnetization by about \(2\mu_B\).</p>
+  </div>
+  <div class="canvas-holder" style="margin-top:1.25rem"><canvas id="spinCanvas" aria-label="The ground state of a ferromagnet and a spin wave of precessing dipoles"></canvas></div>
+  <div class="legend">
+    <label class="ctl" for="spinL" style="flex:1 1 18rem;margin:0"><span class="lt">Wavelength, in atomic spacings</span> <output id="spinLOut"></output>
+      <input type="range" id="spinL" min="4" max="24" step="1" value="10"></label>
+    <button type="button" id="spinPlay">Pause</button>
+  </div>
+  <div class="prose" style="margin-top:1.5rem">
+    <p>A long-wavelength spin wave costs little energy, because neighboring dipoles differ only slightly in direction. Unlike sound, the frequency goes as the <em>square</em> of \(1/\lambda\), so (watch the animation) shortening the wavelength speeds the precession up quadratically, and \(\varepsilon = p^2/2m^*\), with \(m^* = 1.24 \times 10^{-29}\ \mathrm{kg}\) for iron, about 14 electron masses. Magnons have only one polarization. At low temperature,</p>
+    <div class="eq">\[ \frac{N_m}{V} = 2\pi\left(\frac{2m^*k_{\mathrm{B}}T}{h^2}\right)^{3/2}\int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx, \qquad \int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx \approx 2.31516 \]</div>
+    <div class="eq">\[ \frac{M(0)-M(T)}{M(0)} = \left(\frac{T}{T_0}\right)^{3/2}, \qquad \frac{C_V}{Nk_{\mathrm{B}}} = \left(\frac{T}{T_1}\right)^{3/2}, \qquad \frac{T_1}{T_0} = \left(\frac{2\pi \times 2.31516}{5\pi \times 1.78329}\right)^{2/3} \approx 0.646 \]</div>
+    <p>using \(\int_0^\infty x^{3/2}/(e^x-1)\,dx \approx 1.78329\). For iron, \(T_0 \approx 4200\ \mathrm{K}\) and \(T_1 \approx 2700\ \mathrm{K}\), so the magnetization drops only slowly at room temperature. Compare the magnon and phonon heat capacities (iron’s \(T_D = 470\ \mathrm{K}\)):</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="feCanvas" aria-label="Magnon and phonon heat capacities of iron versus temperature, on logarithmic axes"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--magnon)"></span>Magnons, \((T/T_1)^{3/2}\)</span>
+        <span><span class="swatch line" style="background:var(--debye)"></span>Phonons, full Debye formula</span>
+        <span><span class="swatch dash" style="border-color:var(--approx)"></span>Phonons, low-\(T\) law</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="feT"><span class="lt">Temperature \(T\)</span> <output id="feTOut"></output></label>
+        <input type="range" id="feT" min="-1" max="3" step="0.01" value="2.477">
+      </div>
+      <dl class="stats">
+        <dt>Magnetization lost, \((T/T_0)^{3/2}\)</dt><dd id="feM">–</dd>
+        <dt class="sep"></dt>
+        <dt style="grid-column:1/-1;color:var(--ink);font-weight:500">\(C_V/Nk_{\mathrm{B}}\)</dt>
+        <dt>Magnons</dt><dd id="feCm">–</dd>
+        <dt>Phonons (Debye)</dt><dd id="feCp">–</dd>
+        <dt>Phonons (low-\(T\) law)</dt><dd id="feCl">–</dd>
+        <dt class="sep"></dt>
+        <dt>Phonons ÷ magnons</dt><dd id="feR">–</dd>
+      </dl>
+      <p class="cap" id="feNote" style="margin:.75rem 0 0">* The low-\(T\) law only holds well below \(T_D\), roughly under 0.1 \(T_D\) ≈ 47 K, so its value here is not physical.</p>
+    </div>
+  </div>
+  <p class="prose note" style="margin-top:1.25rem">At 300 K, the low-temperature phonon formula gives \(C_V/Nk_{\mathrm{B}} \approx 61\), as in the lecture, but 300 K is \(0.64\,T_D\), outside that formula’s range; the full Debye formula gives about 2.7. Either way phonons win by a wide margin, while magnons give \(1/27\). Magnons would only take over below about 2 K, and in iron the conduction electrons dominate there anyway.</p>
+
+  <h3>No magnetization in two dimensions</h3>
+  <div class="prose">
+    <p>For a two-dimensional array of dipoles, the magnon count becomes \(N_m \propto \int_0 dx/(e^x - 1)\), which diverges at small \(x\), that is, for the longest wavelengths. The number of magnons, and so the reduction in magnetization, grows without bound as the system gets larger: no spontaneous magnetization at any finite temperature in 2D, at least in this model. (The Ising model in Section 8.2 is a two-dimensional model in which magnetization does occur.) The lower limit \(x_{\min}\) shrinks as the system grows, roughly as \(1/L^2\):</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="divCanvas" aria-label="The 3D magnon integral converging while the 2D integral diverges as the lower cutoff shrinks"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--debye)"></span>3D: \(\int_{x_{\min}}^\infty \sqrt{x}\,dx/(e^x-1)\)</span>
+        <span><span class="swatch line" style="background:var(--warn)"></span>2D: \(\int_{x_{\min}}^\infty dx/(e^x-1)\)</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="xmin"><span class="lt">Cutoff \(x_{\min}\)</span> <output id="xminOut"></output></label>
+        <input type="range" id="xmin" min="-8" max="0" step="0.05" value="-2">
+        <small>Smaller cutoff means a bigger system.</small>
+      </div>
+      <dl class="stats">
+        <dt>3D integral</dt><dd id="i3">–</dd>
+        <dt>2D integral</dt><dd id="i2">–</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">The 3D integral settles at 2.31516; the 2D one equals \(-\ln(1 - e^{-x_{\min}})\) and keeps growing like \(\ln(1/x_{\min})\).</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.5, Debye Theory of Solids, with Problem 7.64).</p>
+    <p>Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(R = 8.314\ \mathrm{J/(mol\,K)}\). Material values are typical handbook values. Equations typeset with MathJax.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let C = {};
+function readColors(){
+  const cs = getComputedStyle(document.documentElement);
+  ['bg','surface','ink','muted','rule','band','debye','einstein','approx','res','magnon','warn'].forEach(k => C[k] = cs.getPropertyValue('--'+k).trim());
+}
+readColors();
+const SANS = '"Instrument Sans", system-ui, sans-serif';
+const SERIF = '"Newsreader", Georgia, serif';
+function fit(cv, LW, LH){
+  const w = cv.parentElement.clientWidth || LW, hgt = w*LH/LW;
+  cv.style.height = hgt + 'px';
+  const d = window.devicePixelRatio || 1;
+  cv.width = Math.round(w*d); cv.height = Math.round(hgt*d);
+  const ctx = cv.getContext('2d'); const s = w*d/LW;
+  ctx.setTransform(s,0,0,s,0,0);
+  return ctx;
+}
+function rich(c, x, y, size, parts, align){
+  c.save(); c.textAlign = 'left';
+  const fontOf = st => st==='i' ? 'italic '+size+'px '+SERIF : st==='isub' ? 'italic '+(size*0.7)+'px '+SERIF : (st==='sub'||st==='sup') ? (size*0.7)+'px '+SERIF : st==='s' ? (size*0.88)+'px '+SANS : size+'px '+SERIF;
+  const widths = parts.map(([t,st]) => { c.font = fontOf(st); return c.measureText(t).width; });
+  const total = widths.reduce((a,b)=>a+b,0);
+  let cx = align==='center' ? x-total/2 : align==='right' ? x-total : x;
+  parts.forEach(([t,st],i) => { c.font = fontOf(st); const dy = (st==='sub'||st==='isub') ? size*0.25 : st==='sup' ? -size*0.38 : 0; c.fillText(t, cx, y+dy); cx += widths[i]; });
+  c.restore(); return total;
+}
+function sci(x, sig){
+  sig = sig || 2;
+  if (!isFinite(x)) return '–';
+  if (x === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(x)));
+  if (e >= -2 && e < 5) return Number(x.toPrecision(sig)).toLocaleString('en-US',{maximumSignificantDigits:sig});
+  let m = (Math.abs(x)/Math.pow(10,e)).toFixed(sig-1), ee = e;
+  if (parseFloat(m) >= 10){ m = (parseFloat(m)/10).toFixed(sig-1); ee++; }
+  return (x<0?'−':'') + m + ' × 10<sup>' + (ee<0?'−'+(-ee):ee) + '</sup>';
+}
+const SUP = n => String(n).replace('-','⁻').replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+const pow10 = e => e===0 ? '1' : e===1 ? '10' : '10' + SUP(e);
+function tStr(T){ return T < 10 ? T.toFixed(2) + ' K' : Math.round(T).toLocaleString('en-US') + ' K'; }
+const kB = 1.380649e-23, h = 6.62607015e-34, eV = 1.602176634e-19, R = 8.314462618;
+
+/* ---------- heat-capacity functions ---------- */
+// mode contribution g(x) = x^2 e^x/(e^x-1)^2 (one oscillator's C/k_B)
+function gmode(x){ if (x < 1e-6) return 1; if (x > 700) return 0; const e = Math.exp(-x); return x*x*e/((1-e)*(1-e)); }
+function simpson(f, a, b, n){ if (b<=a) return 0; const hh=(b-a)/n; let s=f(a)+f(b); for (let i=1;i<n;i++) s += (i%2?4:2)*f(a+i*hh); return s*hh/3; }
+// C/3Nk, Debye
+function cDebye(t){ if (t <= 0) return 0; const xm = Math.min(1/t, 80); return 3*t*t*t*simpson(x => x*x*gmode(x), 0, xm, 400); }
+const TE_RATIO = Math.sqrt(3/5);
+function cEinstein(t){ return t <= 0 ? 0 : gmode(TE_RATIO/t); }
+const cT3 = t => 4*Math.pow(Math.PI,4)/5*t*t*t;
+
+/* ================= CHAIN ================= */
+const CH = {n:2, t:0, running:!reduceMotion, last:performance.now()};
+const NAT = 12;
+function chainDraw(){
+  const c = chainCtx; if (!c) return;
+  const W=640,H=300; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const x0=40, x1=W-40, sp=(x1-x0)/(NAT+1), yc=150, amp=70;
+  const n = CH.n, m = n <= NAT ? n : (n === NAT+1 ? 0 : 2*(NAT+1) - n), sgn = n <= NAT ? 1 : -1;
+  const omega = 1.1*Math.max(m,0.0001);
+  const phase = Math.cos(omega*CH.t);
+  // walls
+  c.fillStyle=C.band; c.fillRect(x0-14, yc-amp-20, 10, 2*amp+40); c.fillRect(x1+4, yc-amp-20, 10, 2*amp+40);
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(x0,yc); c.lineTo(x1,yc); c.stroke();
+  // the continuous wave of mode n
+  c.strokeStyle = n <= NAT ? C.debye : C.warn; c.lineWidth = n <= NAT ? 1.6 : 1.4; c.globalAlpha = n <= NAT ? 0.5 : 0.8;
+  c.beginPath(); for (let i=0;i<=600;i++){ const xx = i/600*(NAT+1); const y = yc - amp*phase*Math.sin(n*Math.PI*xx/(NAT+1))*(n<=NAT?1:1); i?c.lineTo(x0+xx*sp,y):c.moveTo(x0+xx*sp,y); } c.stroke(); c.globalAlpha=1;
+  // equivalent longer mode
+  if (n > NAT+1){
+    c.strokeStyle=C.debye; c.lineWidth=2; c.beginPath();
+    for (let i=0;i<=400;i++){ const xx=i/400*(NAT+1); const y = yc - amp*phase*sgn*Math.sin(m*Math.PI*xx/(NAT+1)); i?c.lineTo(x0+xx*sp,y):c.moveTo(x0+xx*sp,y); } c.stroke();
+  }
+  // springs and atoms
+  const pos = []; for (let j=1;j<=NAT;j++) pos.push([x0+j*sp, yc - amp*phase*Math.sin(n*Math.PI*j/(NAT+1))]);
+  c.strokeStyle=C.muted; c.lineWidth=1.2; c.beginPath(); c.moveTo(x0, yc); pos.forEach(p => c.lineTo(p[0],p[1])); c.lineTo(x1, yc); c.stroke();
+  c.fillStyle=C.ink; pos.forEach(p => { c.beginPath(); c.arc(p[0],p[1],6,0,7); c.fill(); });
+  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='left';
+  c.fillText('12 atoms, fixed ends (transverse motion shown)', x0-10, H-14);
+}
+function chainInfo(){
+  const n = CH.n;
+  $('modeNOut').textContent = n;
+  const lamA = 2*(NAT+1)/n;
+  $('chainLam').innerHTML = lamA.toFixed(2) + ' spacings';
+  const mEq = n <= NAT ? n : 2*(NAT+1) - n;
+  $('chainE').innerHTML = n === NAT+1 ? 'no motion' : n <= NAT ? n + ' × <i>hc<sub>s</sub></i>/2<i>L</i>' : 'same as mode ' + mEq;
+  let v;
+  if (n <= NAT) v = n === 1 ? 'The lowest mode: the whole row moves together, so it has the lowest frequency and the smallest energy unit.' : n === NAT ? 'The highest mode: each atom moves opposite to its neighbors. Its wavelength is about twice the atomic spacing, the shortest possible.' : 'Mode ' + n + ' of ' + NAT + '. Higher modes have shorter wavelengths, higher frequencies, and larger energy units.';
+  else if (n === NAT+1) v = 'Every atom sits exactly at a node: this “mode” moves nothing at all.';
+  else v = 'Not a new mode. The red wave is too short to be sampled by the atoms; they move exactly as in mode ' + (2*(NAT+1)-n) + ' (teal). Wavelengths shorter than twice the spacing are not possible.';
+  $('chainVerdict').textContent = v;
+  $('chainPlay').textContent = CH.running ? 'Pause' : 'Play';
+}
+$('modeN').addEventListener('input', e => { CH.n = +e.target.value; chainInfo(); chainDraw(); });
+$('chainPlay').addEventListener('click', () => { CH.running = !CH.running; CH.last = performance.now(); chainInfo(); });
+
+/* ================= DEBYE SPHERE (3D) ================= */
+const K3 = 8, RS = K3*Math.pow(6/Math.PI, 1/3);
+const pts = [];
+for (let x=1;x<=10;x++) for (let y=1;y<=10;y++) for (let z=1;z<=10;z++){
+  const r = Math.hypot(x,y,z), inCube = x<=K3 && y<=K3 && z<=K3, inSph = r <= RS;
+  if (inCube || inSph) pts.push({x,y,z,r,kind: inCube && inSph ? 0 : inCube ? 1 : 2});
+}
+// continuum shell-area table for the unit cube (radius distribution), for the "real cube" heat capacity
+const SB = 400, SHELL = new Float64Array(SB), RMAX = Math.sqrt(3);
+(function(){ const M = 90; for (let i=0;i<M;i++) for (let j=0;j<M;j++) for (let k=0;k<M;k++){ const r = Math.hypot((i+.5)/M,(j+.5)/M,(k+.5)/M); SHELL[Math.min(SB-1, Math.floor(r/RMAX*SB))] += 1/(M*M*M); } })();
+const RS1 = Math.pow(6/Math.PI, 1/3);
+function cCube(t){ let s=0; for (let b=0;b<SB;b++){ const r=(b+0.5)/SB*RMAX; s += SHELL[b]*gmode(r/(RS1*t)); } return s; }
+const SV = {t: Math.pow(10,-0.7), yaw:0.72, pitch:0.42, spinning:!reduceMotion, drag:null, visible:true};
+function proj(x, y, z){
+  const cy = Math.cos(SV.yaw), sy = Math.sin(SV.yaw), cp = Math.cos(SV.pitch), sp = Math.sin(SV.pitch);
+  x -= 4; y -= 4; z -= 4;
+  const xr = cy*x - sy*y, yr = sy*x + cy*y, depth = yr*cp - z*sp, up = yr*sp + z*cp;
+  const f = 1/(1 + depth*0.035);
+  return {X: 300 + xr*26*f, Y: 300 - up*26*f, d: depth, f};
+}
+function sphDraw(){
+  const c = sphCtx; if (!c) return;
+  const W=600,H=600; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const line = (pp, col, w, dash, alpha) => { c.save(); c.globalAlpha=alpha||1; c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); pp.forEach((p,i)=>{ const q=proj(p[0],p[1],p[2]); i?c.lineTo(q.X,q.Y):c.moveTo(q.X,q.Y); }); c.stroke(); c.restore(); };
+  // axes
+  const AX = 12;
+  [[[AX,0,0],'x'],[[0,AX,0],'y'],[[0,0,AX],'z']].forEach(([b,lab]) => { line([[0,0,0],b], C.muted, 1.3); const q=proj(b[0]*1.05,b[1]*1.05,b[2]*1.05); c.fillStyle=C.muted; rich(c,q.X,q.Y+5,17,[['n','i'],[lab,'isub']],'center'); });
+  // cube wireframe
+  const Kc = K3;
+  const E = [[[0,0,Kc],[Kc,0,Kc]],[[0,0,Kc],[0,Kc,Kc]],[[Kc,0,Kc],[Kc,Kc,Kc]],[[0,Kc,Kc],[Kc,Kc,Kc]],[[Kc,0,0],[Kc,0,Kc]],[[0,Kc,0],[0,Kc,Kc]],[[Kc,Kc,0],[Kc,Kc,Kc]],[[Kc,0,0],[Kc,Kc,0]],[[0,Kc,0],[Kc,Kc,0]]];
+  E.forEach(([a,b]) => line([a,b], C.warn, 1.6, [], 0.7));
+  // sphere wireframe
+  const arc = fn => { const a=[]; for (let k=0;k<=40;k++){ const t=k/40*Math.PI/2; a.push(fn(t)); } return a; };
+  const rs = RS;
+  [arc(t=>[rs*Math.cos(t), rs*Math.sin(t), 0]), arc(t=>[rs*Math.cos(t),0,rs*Math.sin(t)]), arc(t=>[0,rs*Math.cos(t),rs*Math.sin(t)]),
+   arc(t=>[rs*Math.cos(t)*Math.SQRT1_2, rs*Math.cos(t)*Math.SQRT1_2, rs*Math.sin(t)])].forEach(a => line(a, C.approx, 1.6, [6,5], 0.8));
+  // points, far to near
+  const t = SV.t;
+  const q = pts.map(p => ({p, q: proj(p.x,p.y,p.z), a: gmode(p.r/(RS*t))}));
+  q.sort((A,B) => B.q.d - A.q.d);
+  const cols = [C.debye, C.warn, C.approx];
+  q.forEach(o => { const a = o.a; c.globalAlpha = 0.07 + 0.93*a; c.fillStyle = cols[o.p.kind]; c.beginPath(); c.arc(o.q.X, o.q.Y, (2.2 + 3.4*a)*o.q.f, 0, 7); c.fill(); });
+  c.globalAlpha = 1;
+}
+function sphInfo(){
+  const t = SV.t;
+  $('sphTOut').textContent = t.toFixed(3);
+  const a = cCube(t), b = cDebye(t);
+  $('sphCube').textContent = a.toFixed(4); $('sphSph').textContent = b.toFixed(4);
+  $('sphDiff').textContent = (Math.abs(b-a)/Math.max(b,1e-12)*100).toFixed(1) + '%';
+  $('sphSpin').textContent = SV.spinning ? 'Pause rotation' : 'Rotate';
+}
+$('sphT').addEventListener('input', e => { SV.t = Math.pow(10, +e.target.value); sphInfo(); sphDraw(); });
+$('sphSpin').addEventListener('click', () => { SV.spinning = !SV.spinning; sphInfo(); });
+const sCv = $('sphCanvas');
+sCv.addEventListener('pointerdown', e => { SV.drag = {x:e.clientX, y:e.clientY, yaw:SV.yaw, pitch:SV.pitch}; sCv.setPointerCapture(e.pointerId); });
+sCv.addEventListener('pointermove', e => { if (!SV.drag) return; SV.yaw = SV.drag.yaw - (e.clientX-SV.drag.x)*0.01; SV.pitch = Math.max(-0.2, Math.min(1.35, SV.drag.pitch + (e.clientY-SV.drag.y)*0.01)); sphDraw(); });
+const endDrag = () => { SV.drag = null; }; sCv.addEventListener('pointerup', endDrag); sCv.addEventListener('pointercancel', endDrag);
+sCv.addEventListener('keydown', e => { const k = {ArrowLeft:[0.1,0], ArrowRight:[-0.1,0], ArrowUp:[0,-0.08], ArrowDown:[0,0.08]}[e.key]; if (!k) return; e.preventDefault(); SV.yaw += k[0]; SV.pitch = Math.max(-0.2, Math.min(1.35, SV.pitch + k[1])); sphDraw(); });
+
+/* ================= DEBYE CURVE + MATERIALS ================= */
+const MATS = [
+  {k:'Pb', name:'Lead', TD:88}, {k:'Au', name:'Gold', TD:165}, {k:'Ag', name:'Silver', TD:225}, {k:'Cu', name:'Copper', TD:343},
+  {k:'Al', name:'Aluminum', TD:428}, {k:'Fe', name:'Iron', TD:470}, {k:'Si', name:'Silicon', TD:645}, {k:'C', name:'Diamond', TD:1860}
+];
+const MV = {mat:'Cu', T:300, log:false};
+$('matBtns').innerHTML = MATS.map(m => '<button type="button" data-mat="'+m.k+'">'+m.name+'</button>').join('');
+document.querySelectorAll('[data-mat]').forEach(b => b.addEventListener('click', () => { MV.mat = b.dataset.mat; cvRender(); }));
+function cvRender(){
+  const m = MATS.find(x => x.k === MV.mat), t = MV.T/m.TD;
+  document.querySelectorAll('[data-mat]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mat===MV.mat)));
+  $('matTOut').textContent = tStr(MV.T);
+  $('mTD').textContent = m.TD + ' K'; $('mRatio').textContent = t < 0.01 ? t.toExponential(1) : t.toFixed(3);
+  const cd = 3*R*cDebye(t), c3 = 3*R*cT3(t);
+  $('mC').innerHTML = (cd >= 0.01 ? cd.toPrecision(3) : sci(cd,2)) + ' J/(mol·K)';
+  $('mC3').innerHTML = (c3 > 3*R*3 ? 'not valid here' : (c3 >= 0.01 ? c3.toPrecision(3) : sci(c3,2)) + ' J/(mol·K)');
+  const c = cvCtx; if (!c) return;
+  const W=640,H=400,L=56,Rm=16,T=18,B=48;
+  c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const lg = MV.log;
+  const xlo = lg ? -2 : 0, xhi = lg ? Math.log10(3) : 1.6, ylo = lg ? -6 : 0, yhi = lg ? 0.3 : 1.08;
+  const X = t => L + ((lg ? Math.log10(t) : t) - xlo)/(xhi-xlo)*(W-L-Rm);
+  const Y = v => H-B - ((lg ? Math.log10(Math.max(v,1e-12)) : v) - ylo)/(yhi-ylo)*(H-T-B);
+  c.font='12px '+SANS; c.fillStyle=C.muted;
+  const xt = lg ? [0.01,0.03,0.1,0.3,1,3] : [0,0.2,0.4,0.6,0.8,1,1.2,1.4,1.6];
+  const yt = lg ? [1e-6,1e-5,1e-4,1e-3,1e-2,0.1,1] : [0,0.2,0.4,0.6,0.8,1];
+  c.textAlign='center'; xt.forEach(v => { if (lg && v<=0) return; c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.fillText(String(v), X(v), H-B+16); });
+  c.textAlign='right'; yt.forEach(v => { c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-Rm,Y(v)); c.stroke(); c.fillText(lg ? (v>=0.01 ? String(v) : pow10(Math.round(Math.log10(v)))) : v.toFixed(1), L-6, Y(v)+4); });
+  c.fillStyle=C.muted; rich(c, W-Rm-4, H-10, 15, [['T','i'],[' / ','r'],['T','i'],['D','isub']], 'right');
+  rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / 3','r'],['Nk','i'],['B','sub']], 'left');
+  c.save(); c.beginPath(); c.rect(L,T,W-L-Rm,H-T-B); c.clip();
+  const curve = (f, col, w, dash) => { c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); let st=false;
+    for (let i=0;i<=360;i++){ const tt = lg ? Math.pow(10, xlo + (xhi-xlo)*i/360) : Math.max(1e-4, xhi*i/360); const v=f(tt); const py=Y(v); st ? c.lineTo(X(tt),py) : (c.moveTo(X(tt),py), st=true); } c.stroke(); c.setLineDash([]); };
+  curve(cT3, C.approx, 1.8, [6,5]);
+  curve(cEinstein, C.einstein, 2.2, [7,4]);
+  curve(cDebye, C.debye, 2.8);
+  if (t >= (lg ? 0.01 : 0) && t <= (lg ? 3 : xhi)){ c.fillStyle=C.debye; c.beginPath(); c.arc(X(Math.max(t,1e-4)), Y(cDebye(t)), 5.5, 0, 7); c.fill(); }
+  c.restore();
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
+}
+$('matT').addEventListener('input', e => { MV.T = Math.pow(10, +e.target.value); cvRender(); });
+$('logCv').addEventListener('change', e => { MV.log = e.target.checked; cvRender(); });
+
+/* ================= METALS C/T vs T^2 ================= */
+const METS = [
+  {k:'Au', name:'Gold', g:0.729, TD:165, ef:5.53},
+  {k:'Ag', name:'Silver', g:0.646, TD:225, ef:5.49},
+  {k:'Cu', name:'Copper', g:0.695, TD:343, ef:7.00}
+];
+const BETA = TD => 12*Math.pow(Math.PI,4)*R/(5*TD*TD*TD)*1e3; // mJ/(mol K^4)
+let metSel = 'Cu';
+$('metBtns').innerHTML = METS.map(m => '<button type="button" data-met="'+m.k+'">'+m.name+'</button>').join('');
+document.querySelectorAll('[data-met]').forEach(b => b.addEventListener('click', () => { metSel = b.dataset.met; ctRender(); }));
+function ctRender(){
+  const m = METS.find(x => x.k===metSel), b = BETA(m.TD);
+  document.querySelectorAll('[data-met]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.met===metSel)));
+  const gFree = Math.PI*Math.PI*R*kB/(2*m.ef*eV)*1e3;
+  $('gM').innerHTML = m.g.toFixed(3) + ' mJ/(mol·K<sup>2</sup>)';
+  $('gF').innerHTML = gFree.toFixed(3) + ' mJ/(mol·K<sup>2</sup>)';
+  $('gB').innerHTML = b.toFixed(4) + ' mJ/(mol·K<sup>4</sup>)';
+  $('gTD').textContent = m.TD + ' K';
+  $('gX').textContent = Math.sqrt(m.g/b).toFixed(1) + ' K';
+  const c = ctCtx; if (!c) return;
+  const W=640,H=380,L=56,Rm=70,T=18,B=48, xmax=18, ymax=9;
+  c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const X = v => L + v/xmax*(W-L-Rm), Y = v => H-B - v/ymax*(H-T-B);
+  c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
+  for (let v=0;v<=18;v+=2){ c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.fillText(v, X(v), H-B+16); }
+  c.textAlign='right'; for (let v=0;v<=8;v+=2){ c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-Rm,Y(v)); c.stroke(); c.fillText(v, L-6, Y(v)+4); }
+  c.fillStyle=C.muted; rich(c, W-Rm, H-10, 15, [['T','i'],['2','sup'],['  (K','s'],['2','sup'],[')','s']], 'right');
+  rich(c, L+8, T+14, 15, [['C','i'],['/','r'],['T','i'],['  (mJ/mol·K','s'],['2','sup'],[')','s']], 'left');
+  METS.forEach(mm => {
+    const bb = BETA(mm.TD), sel = mm.k===metSel;
+    c.strokeStyle = sel ? C.debye : C.res; c.lineWidth = sel ? 3 : 1.8;
+    c.beginPath(); c.moveTo(X(0), Y(mm.g)); c.lineTo(X(xmax), Y(mm.g + bb*xmax)); c.stroke();
+    c.fillStyle = sel ? C.ink : C.muted; c.font=(sel?'600 ':'')+'13px '+SANS; c.textAlign='left';
+    c.fillText(mm.name, X(xmax)+6, Y(mm.g + bb*xmax)+4);
+  });
+  const sm = METS.find(x=>x.k===metSel);
+  c.fillStyle=C.einstein; c.beginPath(); c.arc(X(0), Y(sm.g), 5, 0, 7); c.fill();
+  c.font='12px '+SANS; c.textAlign='left'; c.fillText('intercept γ', X(0)+10, Y(sm.g)+18);
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
+}
+
+/* ================= SPIN WAVE ================= */
+const SW = {lam:10, phi:0, running:!reduceMotion};
+function spinDraw(){
+  const c = spinCtx; if (!c) return;
+  const W=900,H=250; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const n = 18, x0 = 120, sp = (W - x0 - 30)/(n-1);
+  c.fillStyle=C.muted; c.font='13px '+SANS; c.textAlign='left';
+  c.fillText('Ground state', 14, 58); c.fillText('Spin wave', 14, 176);
+  // ground state arrows
+  c.strokeStyle=C.ink; c.fillStyle=C.ink; c.lineWidth=2;
+  for (let j=0;j<n;j++){ const x=x0+j*sp; c.beginPath(); c.moveTo(x,82); c.lineTo(x,36); c.stroke(); c.beginPath(); c.moveTo(x,30); c.lineTo(x-5,40); c.lineTo(x+5,40); c.closePath(); c.fill(); }
+  // spin wave: cones (apex at bottom), arrows to the precessing rim point
+  const rimY = 140, apexY = 205, rx = 15, ry = 5;
+  for (let j=0;j<n;j++){
+    const x = x0 + j*sp, ph = SW.phi - 2*Math.PI*j/SW.lam;
+    c.fillStyle=C.band; c.strokeStyle=C.rule; c.lineWidth=1;
+    c.beginPath(); c.moveTo(x-rx, rimY); c.lineTo(x, apexY); c.lineTo(x+rx, rimY); c.closePath(); c.fill(); c.stroke();
+    c.beginPath(); c.ellipse(x, rimY, rx, ry, 0, 0, 2*Math.PI); c.stroke();
+    const tx = x + rx*Math.cos(ph), ty = rimY + ry*Math.sin(ph);
+    const front = Math.sin(ph) > 0;
+    c.strokeStyle = front ? C.magnon : C.ink; c.globalAlpha = front ? 1 : 0.65; c.lineWidth=2;
+    c.beginPath(); c.moveTo(x, apexY); c.lineTo(tx, ty); c.stroke();
+    const ang = Math.atan2(ty-apexY, tx-x); c.fillStyle = c.strokeStyle;
+    c.beginPath(); c.moveTo(tx+Math.cos(ang)*6, ty+Math.sin(ang)*6); c.lineTo(tx+Math.cos(ang+2.6)*7, ty+Math.sin(ang+2.6)*7); c.lineTo(tx+Math.cos(ang-2.6)*7, ty+Math.sin(ang-2.6)*7); c.closePath(); c.fill();
+    c.globalAlpha = 1;
+  }
+  // wavelength brace
+  const bx0 = x0, bx1 = x0 + Math.min(SW.lam, n-1)*sp;
+  c.strokeStyle=C.muted; c.lineWidth=1.2; c.beginPath(); c.moveTo(bx0, 222); c.lineTo(bx0, 230); c.lineTo(bx1, 230); c.lineTo(bx1, 222); c.stroke();
+  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='center'; c.fillText(SW.lam <= n-1 ? 'one wavelength' : 'wavelength continues beyond the picture', (bx0+bx1)/2, 245);
+}
+$('spinL').addEventListener('input', e => { SW.lam = +e.target.value; $('spinLOut').textContent = SW.lam; spinDraw(); });
+$('spinPlay').addEventListener('click', () => { SW.running = !SW.running; $('spinPlay').textContent = SW.running ? 'Pause' : 'Play'; });
+
+/* ================= IRON: MAGNONS VS PHONONS ================= */
+const MSTAR = 1.24e-29, NFE = 7874/55.845e-3*6.02214076e23;
+const T0 = h*h/(2*MSTAR*kB)*Math.pow(NFE/(2*Math.PI*2.31516), 2/3);
+const T1 = T0*Math.pow(2*Math.PI*2.31516/(5*Math.PI*1.78329), 2/3);
+const TDFE = 470;
+let feT = 300;
+const cMag = T => Math.pow(T/T1, 1.5), cPh = T => 3*cDebye(T/TDFE), cPhLow = T => 12*Math.pow(Math.PI,4)/5*Math.pow(T/TDFE,3);
+function feRender(){
+  $('feTOut').textContent = tStr(feT);
+  const dm = Math.pow(feT/T0, 1.5);
+  $('feM').innerHTML = (dm*100 < 0.01 ? sci(dm*100,2) : (dm*100).toPrecision(2)) + '%';
+  const m = cMag(feT), p = cPh(feT), pl = cPhLow(feT);
+  $('feCm').innerHTML = m >= 0.01 ? m.toPrecision(2) : sci(m,2);
+  $('feCp').innerHTML = p >= 0.01 ? p.toPrecision(3) : sci(p,2);
+  $('feCl').innerHTML = (pl >= 0.01 ? pl.toPrecision(3) : sci(pl,2)) + (feT > 0.1*TDFE ? '*' : '');
+  $('feNote').hidden = !(feT > 0.1*TDFE);
+  $('feR').innerHTML = (p/m >= 0.01 ? (p/m).toPrecision(2) : sci(p/m,2));
+  const c = feCtx; if (!c) return;
+  const W=640,H=380,L=56,Rm=16,T=18,B=48;
+  c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const xlo=-1, xhi=3, ylo=-9, yhi=1;
+  const X = t => L + (Math.log10(t)-xlo)/(xhi-xlo)*(W-L-Rm), Y = v => H-B - (Math.log10(Math.max(v,1e-15))-ylo)/(yhi-ylo)*(H-T-B);
+  c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
+  [0.1,1,10,100,1000].forEach(v => { c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.textAlign = v===1000 ? 'right' : 'center'; c.fillText(v + ' K', X(v), H-B+16); });
+  c.textAlign='right'; for (let e=-9;e<=1;e+=2){ c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(Math.pow(10,e))); c.lineTo(W-Rm,Y(Math.pow(10,e))); c.stroke(); c.fillText(pow10(e), L-6, Y(Math.pow(10,e))+4); }
+  c.fillStyle=C.muted; rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / ','r'],['Nk','i'],['B','sub'],['  for iron','s']], 'left');
+  rich(c, W-Rm-4, H-10, 14, [['temperature (log scale)','s']], 'right');
+  c.save(); c.beginPath(); c.rect(L,T,W-L-Rm,H-T-B); c.clip();
+  const curve = (f, col, w, dash) => { c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); for (let i=0;i<=300;i++){ const tt=Math.pow(10, xlo+(xhi-xlo)*i/300); const y=Y(f(tt)); i?c.lineTo(X(tt),y):c.moveTo(X(tt),y); } c.stroke(); c.setLineDash([]); };
+  curve(cPhLow, C.approx, 1.8, [6,5]);
+  curve(cPh, C.debye, 2.8);
+  curve(cMag, C.magnon, 2.8);
+  // crossover
+  let lo=0.1, hi=50; for (let k=0;k<60;k++){ const mid=Math.sqrt(lo*hi); (cMag(mid) > cPh(mid)) ? lo=mid : hi=mid; }
+  const tx = Math.sqrt(lo*hi);
+  c.fillStyle=C.ink; c.beginPath(); c.arc(X(tx), Y(cMag(tx)), 4, 0, 7); c.fill();
+  c.font='12px '+SANS; c.textAlign='left'; c.fillText('cross at ' + tx.toFixed(1) + ' K', X(tx)+8, Y(cMag(tx))+16);
+  c.strokeStyle=C.ink; c.globalAlpha=.4; c.lineWidth=1; c.beginPath(); c.moveTo(X(feT),T); c.lineTo(X(feT),H-B); c.stroke(); c.globalAlpha=1;
+  c.restore();
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
+}
+$('feT').addEventListener('input', e => { feT = Math.pow(10, +e.target.value); feRender(); });
+
+/* ================= 2D DIVERGENCE ================= */
+let lxmin = -2;
+function i3(xm){ // integrate in sqrt variable to handle the endpoint smoothly: x = s^2, dx = 2s ds
+  const s0 = Math.sqrt(xm); return simpson(s => s*s > 1e-12 ? 2*s*s/Math.expm1(s*s) : 2, s0, Math.sqrt(40), 2000);
+}
+const i2 = xm => -Math.log(-Math.expm1(-xm));
+function divRender(){
+  const xm = Math.pow(10, lxmin);
+  $('xminOut').innerHTML = sci(xm,2);
+  $('i3').textContent = i3(xm).toFixed(4); $('i2').textContent = i2(xm).toFixed(3);
+  const c = divCtx; if (!c) return;
+  const W=640,H=320,L=48,Rm=16,T=18,B=46, xlo=-8, xhi=0, ymax=20;
+  c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const X = v => L + (v-xlo)/(xhi-xlo)*(W-L-Rm), Y = v => H-B - v/ymax*(H-T-B);
+  c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
+  for (let e=-8;e<=0;e+=2){ c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(e),T); c.lineTo(X(e),H-B); c.stroke(); c.fillText(pow10(e), X(e), H-B+16); }
+  c.textAlign='right'; [0,5,10,15,20].forEach(v => { c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-Rm,Y(v)); c.stroke(); c.fillText(v, L-6, Y(v)+4); });
+  c.fillStyle=C.muted; rich(c, W-Rm-4, H-8, 14, [['cutoff ','s'],['x','i'],['min','sub'],['  (log scale; bigger system to the left)','s']], 'right');
+  rich(c, L+8, T+14, 14, [['number of magnons (relative)','s']], 'left');
+  const curve = (f, col) => { c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=200;i++){ const lv = xlo+(xhi-xlo)*i/200; const y=Y(f(Math.pow(10,lv))); i?c.lineTo(X(lv),y):c.moveTo(X(lv),y); } c.stroke(); };
+  curve(i3, C.debye); curve(i2, C.warn);
+  c.strokeStyle=C.debye; c.setLineDash([3,4]); c.lineWidth=1; c.beginPath(); c.moveTo(L,Y(2.31516)); c.lineTo(W-Rm,Y(2.31516)); c.stroke(); c.setLineDash([]);
+  [[i3,C.debye],[i2,C.warn]].forEach(([f,col]) => { c.fillStyle=col; c.beginPath(); c.arc(X(lxmin), Y(f(xm)), 5, 0, 7); c.fill(); });
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
+}
+$('xmin').addEventListener('input', e => { lxmin = +e.target.value; divRender(); });
+
+/* ================= LAYOUT + ANIMATION ================= */
+let chainCtx, sphCtx, cvCtx, ctCtx, spinCtx, feCtx, divCtx;
+function layout(){
+  chainCtx = fit($('chainCanvas'), 640, 300);
+  sphCtx = fit($('sphCanvas'), 600, 600);
+  cvCtx = fit($('cvCanvas'), 640, 400);
+  ctCtx = fit($('ctCanvas'), 640, 380);
+  spinCtx = fit($('spinCanvas'), 900, 250);
+  feCtx = fit($('feCanvas'), 640, 380);
+  divCtx = fit($('divCanvas'), 640, 320);
+  redrawAll();
+}
+function redrawAll(){ chainInfo(); chainDraw(); sphInfo(); sphDraw(); cvRender(); ctRender(); spinDraw(); feRender(); divRender(); }
+let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 80); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); redrawAll(); });
+const vis = {chain:true, sph:true, spin:true};
+const io = new IntersectionObserver(es => es.forEach(e => { vis[e.target.dataset.key] = e.isIntersecting; }));
+[['chainCanvas','chain'],['sphCanvas','sph'],['spinCanvas','spin']].forEach(([id,k]) => { $(id).dataset.key = k; io.observe($(id)); });
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now-last)/1000); last = now;
+  if (CH.running && vis.chain && chainCtx){ CH.t += dt; chainDraw(); }
+  if (SV.spinning && !SV.drag && vis.sph && sphCtx){ SV.yaw += dt*0.25; sphDraw(); }
+  if (SW.running && vis.spin && spinCtx){ SW.phi += dt*2.2*Math.pow(10/SW.lam, 2); spinDraw(); }
+  requestAnimationFrame(loop);
+}
+$('matT').value = Math.log10(MV.T).toFixed(3); $('feT').value = Math.log10(feT).toFixed(3);
+$('spinLOut').textContent = SW.lam; $('spinPlay').textContent = SW.running ? 'Pause' : 'Play';
+layout();
+requestAnimationFrame(loop);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll);
+})();
+</script>
+</body>
+</html>
