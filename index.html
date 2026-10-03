@@ -49,6 +49,11 @@ p{margin:0 0 1rem}
 .note{font-size:.95rem;color:var(--muted)}
 
 .eq{display:block;text-align:center;margin:1.25rem 0;overflow-x:auto;overflow-y:hidden;padding:.25rem 0}
+.eq.multi{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:2.2em;row-gap:.65rem}
+.boxed.multi{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:2em;row-gap:.6rem;max-width:100%}
+.eqp{max-width:100%}
+.eqp.sep{margin-left:1.85em}
+.multi:not(.chain) > .eqp.cont{margin-left:-1.85em}
 mjx-container{color:inherit}
 mjx-container[display="true"]{margin:0 !important}
 .stats mjx-container,.legend mjx-container,.cap mjx-container,.ctl small mjx-container{font-size:105%}
@@ -156,7 +161,7 @@ window.MathJax = {
   <h2 id="h-sphere">Debye’s spherical cow</h2>
   <div class="prose">
     <p>Since \(n\) can’t exceed the number of atoms in a row, \(N^{1/3}\), the real sum runs over a cube in \(n\)-space, \([1, N^{1/3}]^3\). Peter Debye’s clever idea was to pretend instead that the relevant region is an eighth of a sphere with the same total volume \(N\):</p>
-    <div class="eq">\[ \frac18\cdot\frac43\pi n_{\max}^3 = N \quad\Longrightarrow\quad n_{\max} = \left(\frac{6N}{\pi}\right)^{1/3} \]</div>
+    <div class="eq multi"><span class="eqp">\( \displaystyle \frac18\cdot\frac43\pi n_{\max}^3 = N \)</span><span class="eqp">\( \displaystyle \Longrightarrow\; n_{\max} = \left(\frac{6N}{\pi}\right)^{1/3} \)</span></div>
     <p>This is exact in both limits. At high \(T\), all that matters is the total number of modes, which the sphere preserves. At low \(T\), modes with large \(\vec{n}\) are frozen out anyway, so it doesn’t matter how we count them. The picture shows a cube of \(8^3\) modes; brightness shows how active each mode is (its contribution to \(C_V\)).</p>
   </div>
   <div class="fig">
@@ -192,9 +197,9 @@ window.MathJax = {
     <p>Integrating over the eighth-sphere with \(x = hc_s n/2Lk_{\mathrm{B}}T\), the upper limit becomes \(x_{\max} = T_D/T\), where</p>
     <div class="eq"><span class="boxed">\( \displaystyle T_D = \frac{hc_s}{2Lk_{\mathrm{B}}}\left(\frac{6N}{\pi}\right)^{1/3} = \frac{hc_s}{2k_{\mathrm{B}}}\left(\frac{6N}{\pi V}\right)^{1/3} \)</span></div>
     <p>is the Debye temperature. Then</p>
-    <div class="eq">\[ U = \frac{9Nk_{\mathrm{B}}T^4}{T_D^3}\int_0^{T_D/T}\frac{x^3}{e^x - 1}\,dx, \qquad C_V = 9Nk_{\mathrm{B}}\left(\frac{T}{T_D}\right)^3\int_0^{T_D/T}\frac{x^4 e^x}{(e^x-1)^2}\,dx \]</div>
+    <div class="eq multi"><span class="eqp">\( \displaystyle U = \frac{9Nk_{\mathrm{B}}T^4}{T_D^3}\int_0^{T_D/T}\frac{x^3}{e^x - 1}\,dx, \)</span><span class="eqp">\( \displaystyle C_V = 9Nk_{\mathrm{B}}\left(\frac{T}{T_D}\right)^3\int_0^{T_D/T}\frac{x^4 e^x}{(e^x-1)^2}\,dx \)</span></div>
     <p>For \(T \gg T_D\), \(x\) is always small, \(\int x^3/(e^x-1)\,dx \approx \int x^2\,dx\), and \(U \approx 3Nk_{\mathrm{B}}T\), in agreement with equipartition and with the Einstein model. For \(T \ll T_D\), the upper limit can go to infinity, \(\int_0^\infty x^3/(e^x-1)\,dx = \pi^4/15\) as for the photon gas, and</p>
-    <div class="eq"><span class="boxed">\( \displaystyle U \approx \frac{3\pi^4}{5}\frac{Nk_{\mathrm{B}}T^4}{T_D^3}, \qquad C_V \approx \frac{12\pi^4}{5}\left(\frac{T}{T_D}\right)^3 Nk_{\mathrm{B}} \)</span></div>
+    <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle U \approx \frac{3\pi^4}{5}\frac{Nk_{\mathrm{B}}T^4}{T_D^3}, \)</span><span class="eqp">\( \displaystyle C_V \approx \frac{12\pi^4}{5}\left(\frac{T}{T_D}\right)^3 Nk_{\mathrm{B}} \)</span></span></div>
     <p>The \(T^3\) law agrees beautifully with low-temperature experiments on almost any solid. In between, the integral is done numerically.</p>
   </div>
 
@@ -231,7 +236,7 @@ window.MathJax = {
   <h2 id="h-metals">Metals: electrons plus phonons</h2>
   <div class="prose">
     <p>In a metal, the conduction electrons add their own heat capacity, linear in \(T\) (Section 7.3): \(C_{\text{el}} = \frac{\pi^2}{2}\frac{Nk_{\mathrm{B}}^2}{\varepsilon_F}T\). At low temperature,</p>
-    <div class="eq"><span class="boxed">\( \displaystyle C = \gamma T + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^3 \quad\Longrightarrow\quad \frac{C}{T} = \gamma + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^2 \)</span></div>
+    <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle C = \gamma T + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^3 \)</span><span class="eqp">\( \displaystyle \Longrightarrow\; \frac{C}{T} = \gamma + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^2 \)</span></span></div>
     <p>so a plot of \(C/T\) against \(T^2\) is a straight line: the intercept is the electronic coefficient \(\gamma\), and the slope gives \(T_D\).</p>
   </div>
   <div class="fig">
@@ -268,8 +273,8 @@ window.MathJax = {
   </div>
   <div class="prose" style="margin-top:1.5rem">
     <p>A long-wavelength spin wave costs little energy, because neighboring dipoles differ only slightly in direction. Unlike sound, the frequency goes as the <em>square</em> of \(1/\lambda\), so (watch the animation) shortening the wavelength speeds the precession up quadratically, and \(\varepsilon = p^2/2m^*\), with \(m^* = 1.24 \times 10^{-29}\ \mathrm{kg}\) for iron, about 14 electron masses. Magnons have only one polarization. At low temperature,</p>
-    <div class="eq">\[ \frac{N_m}{V} = 2\pi\left(\frac{2m^*k_{\mathrm{B}}T}{h^2}\right)^{3/2}\int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx, \qquad \int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx \approx 2.31516 \]</div>
-    <div class="eq">\[ \frac{M(0)-M(T)}{M(0)} = \left(\frac{T}{T_0}\right)^{3/2}, \qquad \frac{C_V}{Nk_{\mathrm{B}}} = \left(\frac{T}{T_1}\right)^{3/2}, \qquad \frac{T_1}{T_0} = \left(\frac{2\pi \times 2.31516}{5\pi \times 1.78329}\right)^{2/3} \approx 0.646 \]</div>
+    <div class="eq multi"><span class="eqp">\( \displaystyle \frac{N_m}{V} = 2\pi\left(\frac{2m^*k_{\mathrm{B}}T}{h^2}\right)^{3/2}\int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx, \)</span><span class="eqp">\( \displaystyle \int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx \approx 2.31516 \)</span></div>
+    <div class="eq multi"><span class="eqp">\( \displaystyle \frac{M(0)-M(T)}{M(0)} = \left(\frac{T}{T_0}\right)^{3/2}, \)</span><span class="eqp">\( \displaystyle \frac{C_V}{Nk_{\mathrm{B}}} = \left(\frac{T}{T_1}\right)^{3/2}, \)</span><span class="eqp">\( \displaystyle \frac{T_1}{T_0} = \left(\frac{2\pi \times 2.31516}{5\pi \times 1.78329}\right)^{2/3} \approx 0.646 \)</span></div>
     <p>using \(\int_0^\infty x^{3/2}/(e^x-1)\,dx \approx 1.78329\). For iron, \(T_0 \approx 4200\ \mathrm{K}\) and \(T_1 \approx 2700\ \mathrm{K}\), so the magnetization drops only slowly at room temperature. Compare the magnon and phonon heat capacities (iron’s \(T_D = 470\ \mathrm{K}\)):</p>
   </div>
   <div class="fig">
