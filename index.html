@@ -188,7 +188,7 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     <div class="panel">
       <div class="ctl">
         <label for="sphT"><span class="lt">\(T/T_D\)</span> <output id="sphTOut"></output></label>
-        <input type="range" id="sphT" min="-1.7" max="0.3" step="0.01" value="-0.7">
+        <input type="range" id="sphT" aria-label="Temperature T / T_D (logarithmic slider)" min="-1.7" max="0.3" step="0.01" value="-0.7">
       </div>
       <div class="ctl btns"><button type="button" id="sphSpin">Pause rotation</button></div>
       <dl class="stats">
@@ -406,6 +406,9 @@ function simpson(f, a, b, n){ if (b<=a) return 0; const hh=(b-a)/n; let s=f(a)+f
 function cDebye(t){ if (t <= 0) return 0; const xm = Math.min(1/t, 80); return 3*t*t*t*simpson(x => x*x*gmode(x), 0, xm, 400); }
 const TE_RATIO = Math.sqrt(3/5);
 function cEinstein(t){ return t <= 0 ? 0 : gmode(TE_RATIO/t); }
+// fixed curves are sampled once and only redrawn afterwards (sliders move just the marker)
+const CURVES = {};
+function sampled(key, n, f){ return CURVES[key] || (CURVES[key] = Float64Array.from({length:n}, (_, i) => f(i))); }
 const cT3 = t => 4*Math.pow(Math.PI,4)/5*t*t*t;
 
 /* ================= CHAIN ================= */
@@ -499,7 +502,7 @@ function sphDraw(){
 }
 function sphInfo(){
   const t = SV.t;
-  $('sphTOut').textContent = t.toFixed(3);
+  $('sphTOut').textContent = t.toFixed(3); $('sphT').setAttribute('aria-valuetext', 'T / T_D = ' + t.toFixed(3));
   const a = cCube(t), b = cDebye(t);
   $('sphCube').textContent = a.toFixed(4); $('sphSph').textContent = b.toFixed(4);
   $('sphDiff').textContent = (Math.abs(b-a)/Math.max(b,1e-12)*100).toFixed(1) + '%';
@@ -544,11 +547,13 @@ function cvRender(){
   c.fillStyle=C.muted; rich(c, W-Rm-4, H-10, 15, [['T','i'],[' / ','r'],['T','i'],['D','isub']], 'right');
   rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / 3','r'],['Nk','i'],['B','sub']], 'left');
   c.save(); c.beginPath(); c.rect(L,T,W-L-Rm,H-T-B); c.clip();
-  const curve = (f, col, w, dash) => { c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); let st=false;
-    for (let i=0;i<=360;i++){ const tt = lg ? Math.pow(10, xlo + (xhi-xlo)*i/360) : Math.max(1e-4, xhi*i/360); const v=f(tt); const py=Y(v); st ? c.lineTo(X(tt),py) : (c.moveTo(X(tt),py), st=true); } c.stroke(); c.setLineDash([]); };
-  curve(cT3, C.approx, 1.8, [6,5]);
-  curve(cEinstein, C.einstein, 2.2, [7,4]);
-  curve(cDebye, C.debye, 2.8);
+  const tAt = i => lg ? Math.pow(10, xlo + (xhi-xlo)*i/360) : Math.max(1e-4, xhi*i/360);
+  const curve = (key, f, col, w, dash) => { const vals = sampled(key + (lg ? ':log' : ':lin'), 361, i => f(tAt(i)));
+    c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); let st=false;
+    for (let i=0;i<=360;i++){ const tt = tAt(i); const py=Y(vals[i]); st ? c.lineTo(X(tt),py) : (c.moveTo(X(tt),py), st=true); } c.stroke(); c.setLineDash([]); };
+  curve('cvT3', cT3, C.approx, 1.8, [6,5]);
+  curve('cvEin', cEinstein, C.einstein, 2.2, [7,4]);
+  curve('cvDeb', cDebye, C.debye, 2.8);
   if (t >= (lg ? 0.01 : 0) && t <= (lg ? 3 : xhi)){ c.fillStyle=C.debye; c.beginPath(); c.arc(X(Math.max(t,1e-4)), Y(cDebye(t)), 5.5, 0, 7); c.fill(); }
   c.restore();
   c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
@@ -659,13 +664,13 @@ function feRender(){
   c.fillStyle=C.muted; rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / ','r'],['Nk','i'],['B','sub'],['  for iron','s']], 'left');
   rich(c, W-Rm-4, H-10, 14, [['temperature (log scale)','s']], 'right');
   c.save(); c.beginPath(); c.rect(L,T,W-L-Rm,H-T-B); c.clip();
-  const curve = (f, col, w, dash) => { c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); for (let i=0;i<=300;i++){ const tt=Math.pow(10, xlo+(xhi-xlo)*i/300); const y=Y(f(tt)); i?c.lineTo(X(tt),y):c.moveTo(X(tt),y); } c.stroke(); c.setLineDash([]); };
-  curve(cPhLow, C.approx, 1.8, [6,5]);
-  curve(cPh, C.debye, 2.8);
-  curve(cMag, C.magnon, 2.8);
-  // crossover
-  let lo=0.1, hi=50; for (let k=0;k<60;k++){ const mid=Math.sqrt(lo*hi); (cMag(mid) > cPh(mid)) ? lo=mid : hi=mid; }
-  const tx = Math.sqrt(lo*hi);
+  const curve = (key, f, col, w, dash) => { const vals = sampled(key, 301, i => f(Math.pow(10, xlo+(xhi-xlo)*i/300)));
+    c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); for (let i=0;i<=300;i++){ const tt=Math.pow(10, xlo+(xhi-xlo)*i/300); const y=Y(vals[i]); i?c.lineTo(X(tt),y):c.moveTo(X(tt),y); } c.stroke(); c.setLineDash([]); };
+  curve('fePhLow', cPhLow, C.approx, 1.8, [6,5]);
+  curve('fePh', cPh, C.debye, 2.8);
+  curve('feMag', cMag, C.magnon, 2.8);
+  // crossover (independent of the slider, so found once)
+  const tx = sampled('feCross', 1, () => { let lo=0.1, hi=50; for (let k=0;k<60;k++){ const mid=Math.sqrt(lo*hi); (cMag(mid) > cPh(mid)) ? lo=mid : hi=mid; } return Math.sqrt(lo*hi); })[0];
   c.fillStyle=C.ink; c.beginPath(); c.arc(X(tx), Y(cMag(tx)), 4, 0, 7); c.fill();
   c.font='12px '+SANS; c.textAlign='left'; c.fillText('cross at ' + tx.toFixed(1) + ' K', X(tx)+8, Y(cMag(tx))+16);
   c.strokeStyle=C.ink; c.globalAlpha=.4; c.lineWidth=1; c.beginPath(); c.moveTo(X(feT),T); c.lineTo(X(feT),H-B); c.stroke(); c.globalAlpha=1;
@@ -683,7 +688,8 @@ const i2 = xm => -Math.log(-Math.expm1(-xm));
 function divRender(){
   const xm = Math.pow(10, lxmin);
   $('xminOut').innerHTML = sci(xm,2);
-  $('i3').textContent = i3(xm).toFixed(4); $('i2').textContent = i2(xm).toFixed(3);
+  const i3x = i3(xm), i2x = i2(xm);
+  $('i3').textContent = i3x.toFixed(4); $('i2').textContent = i2x.toFixed(3);
   const c = divCtx; if (!c) return;
   const W=640,H=320,L=48,Rm=16,T=18,B=46, xlo=-8, xhi=0, ymax=20;
   c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
@@ -693,10 +699,11 @@ function divRender(){
   c.textAlign='right'; [0,5,10,15,20].forEach(v => { c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-Rm,Y(v)); c.stroke(); c.fillText(v, L-6, Y(v)+4); });
   c.fillStyle=C.muted; rich(c, W-Rm-4, H-8, 14, [['cutoff ','s'],['x','i'],['min','sub'],['  (log scale; bigger system to the left)','s']], 'right');
   rich(c, L+8, T+14, 14, [['number of magnons (relative)','s']], 'left');
-  const curve = (f, col) => { c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=200;i++){ const lv = xlo+(xhi-xlo)*i/200; const y=Y(f(Math.pow(10,lv))); i?c.lineTo(X(lv),y):c.moveTo(X(lv),y); } c.stroke(); };
-  curve(i3, C.debye); curve(i2, C.warn);
+  const curve = (key, f, col) => { const vals = sampled(key, 201, i => f(Math.pow(10, xlo+(xhi-xlo)*i/200)));
+    c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=200;i++){ const lv = xlo+(xhi-xlo)*i/200; const y=Y(vals[i]); i?c.lineTo(X(lv),y):c.moveTo(X(lv),y); } c.stroke(); };
+  curve('divI3', i3, C.debye); curve('divI2', i2, C.warn);
   c.strokeStyle=C.debye; c.setLineDash([3,4]); c.lineWidth=1; c.beginPath(); c.moveTo(L,Y(2.31516)); c.lineTo(W-Rm,Y(2.31516)); c.stroke(); c.setLineDash([]);
-  [[i3,C.debye],[i2,C.warn]].forEach(([f,col]) => { c.fillStyle=col; c.beginPath(); c.arc(X(lxmin), Y(f(xm)), 5, 0, 7); c.fill(); });
+  [[i3x,C.debye],[i2x,C.warn]].forEach(([v,col]) => { c.fillStyle=col; c.beginPath(); c.arc(X(lxmin), Y(v), 5, 0, 7); c.fill(); });
   c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
 }
 $('xmin').addEventListener('input', e => { lxmin = +e.target.value; divRender(); });
