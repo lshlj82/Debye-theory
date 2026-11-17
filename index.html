@@ -2,6 +2,24 @@
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
+<!-- lang-toggle:head -->
+<script>(function(){var l='en';try{if(localStorage.getItem('lshlj82-demo-lang')==='ko')l='ko'}catch(e){}window.LANG=l;document.documentElement.dataset.lang=l;window.tr=function(en,ko){return window.LANG==='ko'&&ko!=null?ko:en};})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+#langBtn{position:fixed;z-index:21;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 60px);
+  min-width:40px;height:40px;padding:0 10px;border-radius:20px;display:grid;place-items:center;cursor:pointer;font:600 14px/1 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  background:var(--lb-bg,rgba(255,255,255,.92));color:var(--lb-fg,#1d2633);border:1px solid var(--lb-bd,rgba(20,30,45,.18));box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#langBtn:hover{border-color:currentColor}
+#langBtn:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+:root[data-theme="dark"] #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}}
+:root[data-lang="ko"] body{word-break:keep-all}
+:root[data-lang="ko"]{--sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--serif:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--ui-font:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+:root[data-lang="ko"] body{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+
+@media print{#langBtn{display:none}}
+</style>
+<!-- lang-toggle:head-end -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Debye Theory of Solids, Interactively</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,26 +139,26 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
 <div class="wrap">
 
 <header class="hero">
-  <p class="credit">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.5, Debye Theory of Solids)</p>
-  <h1>Debye Theory of Solids</h1>
-  <p class="lede">The atoms of a crystal don’t vibrate independently: they move together in sound waves, and the quanta of those waves, phonons, are bosons just like photons. Treating them that way explains why the heat capacity of every solid falls as \(T^3\) at low temperature.</p>
+  <p class="credit" data-k="k1">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.5, Debye Theory of Solids)</p>
+  <h1 data-k="k2">Debye Theory of Solids</h1>
+  <p class="lede" data-k="k3">The atoms of a crystal don’t vibrate independently: they move together in sound waves, and the quanta of those waves, phonons, are bosons just like photons. Treating them that way explains why the heat capacity of every solid falls as \(T^3\) at low temperature.</p>
 </header>
 
 <!-- ============ EINSTEIN ============ -->
 <section id="einstein" aria-labelledby="h-einstein">
-  <h2 id="h-einstein">Where the Einstein model fails</h2>
+  <h2 id="h-einstein" data-k="k4">Where the Einstein model fails</h2>
   <div class="prose">
-    <p>The Einstein model treats a solid as a collection of independent quantum harmonic oscillators, each storing energy in units of \(\varepsilon = hf\) (with \(E_n = (n+\tfrac12)\hbar\omega\)). One oscillator has \(Z = 1/(1 - e^{-\beta hf})\) and \(\bar{E} = hf/(e^{\beta hf}-1)\). For \(N\) atoms vibrating in three dimensions, \(N \to 3N\), and</p>
+    <p data-k="k5">The Einstein model treats a solid as a collection of independent quantum harmonic oscillators, each storing energy in units of \(\varepsilon = hf\) (with \(E_n = (n+\tfrac12)\hbar\omega\)). One oscillator has \(Z = 1/(1 - e^{-\beta hf})\) and \(\bar{E} = hf/(e^{\beta hf}-1)\). For \(N\) atoms vibrating in three dimensions, \(N \to 3N\), and</p>
     <div class="eq">\[ C_V = 3Nk_{\mathrm{B}}\,\frac{\left(\varepsilon/k_{\mathrm{B}}T\right)^2 e^{\varepsilon/k_{\mathrm{B}}T}}{\left(e^{\varepsilon/k_{\mathrm{B}}T} - 1\right)^2} \]</div>
-    <p>At high temperature this gives \(C_V \to 3Nk_{\mathrm{B}}\), the equipartition result. But as \(T \to 0\) it predicts \(C_V \propto e^{-\varepsilon/k_{\mathrm{B}}T}/T^2\), falling exponentially, whereas experiments find \(C_V \propto T^3\). The problem is that atoms in a crystal do not vibrate independently. Low-frequency modes, in which large groups of atoms move together, carry small energy units and stay active at very low temperatures, long after the high-frequency modes are frozen out.</p>
+    <p data-k="k6">At high temperature this gives \(C_V \to 3Nk_{\mathrm{B}}\), the equipartition result. But as \(T \to 0\) it predicts \(C_V \propto e^{-\varepsilon/k_{\mathrm{B}}T}/T^2\), falling exponentially, whereas experiments find \(C_V \propto T^3\). The problem is that atoms in a crystal do not vibrate independently. Low-frequency modes, in which large groups of atoms move together, carry small energy units and stay active at very low temperatures, long after the high-frequency modes are frozen out.</p>
   </div>
 </section>
 
 <!-- ============ CHAIN ============ -->
 <section id="chain" aria-labelledby="h-chain">
-  <h2 id="h-chain">Sound waves in a crystal</h2>
+  <h2 id="h-chain" data-k="k7">Sound waves in a crystal</h2>
   <div class="prose">
-    <p>The modes of a crystal are much like those of the electromagnetic field, with three differences. Sound waves travel at the speed of sound \(c_s\) (taken as constant), they have three polarizations (two transverse, one longitudinal: S-waves and P-waves in seismology), and they cannot have wavelengths shorter than twice the atomic spacing. Each bump must contain at least one atom. Try it on a row of 12 atoms with fixed ends.</p>
+    <p data-k="k8">The modes of a crystal are much like those of the electromagnetic field, with three differences. Sound waves travel at the speed of sound \(c_s\) (taken as constant), they have three polarizations (two transverse, one longitudinal: S-waves and P-waves in seismology), and they cannot have wavelengths shorter than twice the atomic spacing. Each bump must contain at least one atom. Try it on a row of 12 atoms with fixed ends.</p>
   </div>
   <div class="fig">
     <div>
@@ -149,41 +167,41 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     </div>
     <div class="panel">
       <div class="ctl">
-        <label for="modeN"><span class="lt">Mode number \(n\)</span> <output id="modeNOut"></output></label>
+        <label for="modeN"><span data-k="k9"><span class="lt">Mode number \(n\)</span></span> <output id="modeNOut"></output></label>
         <input type="range" id="modeN" min="1" max="24" step="1" value="2">
-        <small>With 12 atoms there are only 12 distinct modes. Push past 12 to see why.</small>
+        <span data-k="k10"><small>With 12 atoms there are only 12 distinct modes. Push past 12 to see why.</small></span>
       </div>
       <div class="ctl btns"><button type="button" id="chainPlay">Pause</button></div>
       <dl class="stats">
-        <dt>Wavelength \(\lambda = 2L/n\)</dt><dd id="chainLam">–</dd>
-        <dt>Energy unit \(\varepsilon = hc_s n/2L\)</dt><dd id="chainE">–</dd>
+        <dt data-k="k11">Wavelength \(\lambda = 2L/n\)</dt><dd id="chainLam">–</dd>
+        <dt data-k="k12">Energy unit \(\varepsilon = hc_s n/2L\)</dt><dd id="chainE">–</dd>
       </dl>
     </div>
   </div>
   <div class="prose" style="margin-top:1.5rem">
-    <p>Each mode has equally spaced energy levels with unit \(\varepsilon = hf = hc_s/\lambda = hc_s n/2L\), where \(L\) is the length of the crystal; in three dimensions \(n\) becomes a vector \(\vec{n}\). In equilibrium the average number of units is the Planck distribution, \(\bar{n}_{\mathrm{Pl}} = 1/(e^{\varepsilon/k_{\mathrm{B}}T} - 1)\): just as for photons with \(c \to c_s\). These quanta are called <strong>phonons</strong>, bosons with \(\mu = 0\). The total thermal energy is</p>
+    <p data-k="k13">Each mode has equally spaced energy levels with unit \(\varepsilon = hf = hc_s/\lambda = hc_s n/2L\), where \(L\) is the length of the crystal; in three dimensions \(n\) becomes a vector \(\vec{n}\). In equilibrium the average number of units is the Planck distribution, \(\bar{n}_{\mathrm{Pl}} = 1/(e^{\varepsilon/k_{\mathrm{B}}T} - 1)\): just as for photons with \(c \to c_s\). These quanta are called <strong>phonons</strong>, bosons with \(\mu = 0\). The total thermal energy is</p>
     <div class="eq">\[ U = 3\sum_{n_x}\sum_{n_y}\sum_{n_z} \varepsilon\,\bar{n}_{\mathrm{Pl}}(\varepsilon) \]</div>
-    <p>with the 3 counting polarizations. Unlike photons, though, not every \(\vec{n}\) is allowed.</p>
+    <p data-k="k14">with the 3 counting polarizations. Unlike photons, though, not every \(\vec{n}\) is allowed.</p>
   </div>
 </section>
 
 <!-- ============ DEBYE SPHERE ============ -->
 <section id="sphere" aria-labelledby="h-sphere">
-  <h2 id="h-sphere">Debye’s spherical cow</h2>
+  <h2 id="h-sphere" data-k="k15">Debye’s spherical cow</h2>
   <div class="prose">
-    <p>Since \(n\) can’t exceed the number of atoms in a row, \(N^{1/3}\), the real sum runs over a cube in \(n\)-space, \([1, N^{1/3}]^3\). Peter Debye’s clever idea was to pretend instead that the relevant region is an eighth of a sphere with the same total volume \(N\):</p>
+    <p data-k="k16">Since \(n\) can’t exceed the number of atoms in a row, \(N^{1/3}\), the real sum runs over a cube in \(n\)-space, \([1, N^{1/3}]^3\). Peter Debye’s clever idea was to pretend instead that the relevant region is an eighth of a sphere with the same total volume \(N\):</p>
     <div class="eq multi"><span class="eqp">\( \displaystyle \frac18\cdot\frac43\pi n_{\max}^3 = N \)</span><span class="eqp">\( \displaystyle \Longrightarrow\; n_{\max} = \left(\frac{6N}{\pi}\right)^{1/3} \)</span></div>
-    <p>This is exact in both limits. At high \(T\), all that matters is the total number of modes, which the sphere preserves. At low \(T\), modes with large \(\vec{n}\) are frozen out anyway, so it doesn’t matter how we count them. The picture shows a cube of \(8^3\) modes; brightness shows how active each mode is (its contribution to \(C_V\)).</p>
+    <p data-k="k17">This is exact in both limits. At high \(T\), all that matters is the total number of modes, which the sphere preserves. At low \(T\), modes with large \(\vec{n}\) are frozen out anyway, so it doesn’t matter how we count them. The picture shows a cube of \(8^3\) modes; brightness shows how active each mode is (its contribution to \(C_V\)).</p>
   </div>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="sphCanvas" tabindex="0" style="touch-action:none" aria-label="The cube of real modes in n-space and Debye's eighth-sphere of equal volume. Drag or use the arrow keys to rotate."></canvas></div>
-      <div class="legend">
+      <div class="legend" data-k="k18">
         <span><span class="swatch dot" style="background:var(--debye)"></span>In both the cube and the sphere</span>
         <span><span class="swatch dot" style="background:var(--warn)"></span>Real, but left out of the sphere</span>
         <span><span class="swatch dot" style="background:var(--approx)"></span>Added by the sphere</span>
       </div>
-      <p class="cap">Drag to rotate, or focus the picture and use the arrow keys. Faded points are frozen out.</p>
+      <p class="cap" data-k="k19">Drag to rotate, or focus the picture and use the arrow keys. Faded points are frozen out.</p>
     </div>
     <div class="panel">
       <div class="ctl">
@@ -192,106 +210,106 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
       </div>
       <div class="ctl btns"><button type="button" id="sphSpin">Pause rotation</button></div>
       <dl class="stats">
-        <dt>\(C_V/3Nk_{\mathrm{B}}\), real cube</dt><dd id="sphCube">–</dd>
-        <dt>\(C_V/3Nk_{\mathrm{B}}\), Debye sphere</dt><dd id="sphSph">–</dd>
-        <dt>Difference</dt><dd id="sphDiff">–</dd>
+        <dt data-k="k20">\(C_V/3Nk_{\mathrm{B}}\), real cube</dt><dd id="sphCube">–</dd>
+        <dt data-k="k21">\(C_V/3Nk_{\mathrm{B}}\), Debye sphere</dt><dd id="sphSph">–</dd>
+        <dt data-k="k22">Difference</dt><dd id="sphDiff">–</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">Both regions are treated as continua, as for a macroscopic crystal, so the difference comes only from the shape. It vanishes at low \(T\), is small at high \(T\), and peaks at a few percent near \(T \approx 0.25\,T_D\).</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k23">Both regions are treated as continua, as for a macroscopic crystal, so the difference comes only from the shape. It vanishes at low \(T\), is small at high \(T\), and peaks at a few percent near \(T \approx 0.25\,T_D\).</p>
     </div>
   </div>
 </section>
 
 <!-- ============ DEBYE RESULT ============ -->
 <section id="debye" aria-labelledby="h-debye">
-  <h2 id="h-debye">The Debye heat capacity</h2>
+  <h2 id="h-debye" data-k="k24">The Debye heat capacity</h2>
   <div class="prose">
-    <p>Integrating over the eighth-sphere with \(x = hc_s n/2Lk_{\mathrm{B}}T\), the upper limit becomes \(x_{\max} = T_D/T\), where</p>
+    <p data-k="k25">Integrating over the eighth-sphere with \(x = hc_s n/2Lk_{\mathrm{B}}T\), the upper limit becomes \(x_{\max} = T_D/T\), where</p>
     <div class="eq"><span class="boxed">\( \displaystyle T_D = \frac{hc_s}{2Lk_{\mathrm{B}}}\left(\frac{6N}{\pi}\right)^{1/3} = \frac{hc_s}{2k_{\mathrm{B}}}\left(\frac{6N}{\pi V}\right)^{1/3} \)</span></div>
-    <p>is the Debye temperature. Then</p>
+    <p data-k="k26">is the Debye temperature. Then</p>
     <div class="eq multi"><span class="eqp">\( \displaystyle U = \frac{9Nk_{\mathrm{B}}T^4}{T_D^3}\int_0^{T_D/T}\frac{x^3}{e^x - 1}\,dx, \)</span><span class="eqp">\( \displaystyle C_V = 9Nk_{\mathrm{B}}\left(\frac{T}{T_D}\right)^3\int_0^{T_D/T}\frac{x^4 e^x}{(e^x-1)^2}\,dx \)</span></div>
-    <p>For \(T \gg T_D\), \(x\) is always small, \(\int x^3/(e^x-1)\,dx \approx \int x^2\,dx\), and \(U \approx 3Nk_{\mathrm{B}}T\), in agreement with equipartition and with the Einstein model. For \(T \ll T_D\), the upper limit can go to infinity, \(\int_0^\infty x^3/(e^x-1)\,dx = \pi^4/15\) as for the photon gas, and</p>
+    <p data-k="k27">For \(T \gg T_D\), \(x\) is always small, \(\int x^3/(e^x-1)\,dx \approx \int x^2\,dx\), and \(U \approx 3Nk_{\mathrm{B}}T\), in agreement with equipartition and with the Einstein model. For \(T \ll T_D\), the upper limit can go to infinity, \(\int_0^\infty x^3/(e^x-1)\,dx = \pi^4/15\) as for the photon gas, and</p>
     <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle U \approx \frac{3\pi^4}{5}\frac{Nk_{\mathrm{B}}T^4}{T_D^3}, \)</span><span class="eqp">\( \displaystyle C_V \approx \frac{12\pi^4}{5}\left(\frac{T}{T_D}\right)^3 Nk_{\mathrm{B}} \)</span></span></div>
-    <p>The \(T^3\) law agrees beautifully with low-temperature experiments on almost any solid. In between, the integral is done numerically.</p>
+    <p data-k="k28">The \(T^3\) law agrees beautifully with low-temperature experiments on almost any solid. In between, the integral is done numerically.</p>
   </div>
 
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="cvCanvas" aria-label="Heat capacity versus temperature for the Debye and Einstein models"></canvas></div>
-      <div class="legend">
+      <div class="legend" data-k="k29">
         <span><span class="swatch line" style="background:var(--debye)"></span>Debye</span>
         <span><span class="swatch dash" style="border-color:var(--einstein)"></span>Einstein, with \(\varepsilon\) matched at high \(T\)</span>
         <span><span class="swatch dash" style="border-color:var(--approx)"></span>Low-\(T\) law, \(\propto T^3\)</span>
       </div>
     </div>
     <div class="panel">
-      <div class="ctl"><label class="check" for="logCv"><input type="checkbox" id="logCv"> Logarithmic axes</label></div>
+      <div class="ctl"><label class="check" for="logCv"><input type="checkbox" id="logCv"> <span data-k="k30">Logarithmic axes</span></label></div>
       <div class="ctl btns" role="group" aria-label="Materials" id="matBtns"></div>
       <div class="ctl">
-        <label for="matT"><span class="lt">Temperature \(T\)</span> <output id="matTOut"></output></label>
+        <label for="matT"><span data-k="k31"><span class="lt">Temperature \(T\)</span></span> <output id="matTOut"></output></label>
         <input type="range" id="matT" min="0" max="3.5" step="0.005" value="2.477">
       </div>
       <dl class="stats">
-        <dt>Debye temperature \(T_D\)</dt><dd id="mTD">–</dd>
+        <dt data-k="k32">Debye temperature \(T_D\)</dt><dd id="mTD">–</dd>
         <dt>\(T/T_D\)</dt><dd id="mRatio">–</dd>
-        <dt>Molar \(C_V\), Debye</dt><dd id="mC">–</dd>
-        <dt>Low-\(T\) law</dt><dd id="mC3">–</dd>
-        <dt>Equipartition, \(3R\)</dt><dd>24.9 J/(mol·K)</dd>
+        <dt data-k="k33">Molar \(C_V\), Debye</dt><dd id="mC">–</dd>
+        <dt data-k="k34">Low-\(T\) law</dt><dd id="mC3">–</dd>
+        <dt data-k="k35">Equipartition, \(3R\)</dt><dd data-k="k36">24.9 J/(mol·K)</dd>
       </dl>
     </div>
   </div>
-  <p class="prose note" style="margin-top:1.25rem">In the Einstein curve, \(\varepsilon\) is chosen so the two models agree at high temperature, which puts \(\varepsilon/k_{\mathrm{B}} = \sqrt{3/5}\,T_D \approx 0.77\,T_D\). Note how much flatter the Einstein curve is at low temperature, especially on logarithmic axes. Since \(C_V\) reaches 95% of its maximum at \(T = T_D\), the Debye temperature tells you roughly when equipartition is good enough. Typical values range from 88 K for lead (soft and dense) to 1860 K for diamond (stiff and light); the others shown are typical handbook values. In practice \(T_D\) is usually chosen to fit measured heat capacities rather than computed from \(c_s\).</p>
+  <p class="prose note" style="margin-top:1.25rem" data-k="k37">In the Einstein curve, \(\varepsilon\) is chosen so the two models agree at high temperature, which puts \(\varepsilon/k_{\mathrm{B}} = \sqrt{3/5}\,T_D \approx 0.77\,T_D\). Note how much flatter the Einstein curve is at low temperature, especially on logarithmic axes. Since \(C_V\) reaches 95% of its maximum at \(T = T_D\), the Debye temperature tells you roughly when equipartition is good enough. Typical values range from 88 K for lead (soft and dense) to 1860 K for diamond (stiff and light); the others shown are typical handbook values. In practice \(T_D\) is usually chosen to fit measured heat capacities rather than computed from \(c_s\).</p>
 </section>
 
 <!-- ============ METALS ============ -->
 <section id="metals" aria-labelledby="h-metals">
-  <h2 id="h-metals">Metals: electrons plus phonons</h2>
+  <h2 id="h-metals" data-k="k38">Metals: electrons plus phonons</h2>
   <div class="prose">
-    <p>In a metal, the conduction electrons add their own heat capacity, linear in \(T\) (Section 7.3): \(C_{\text{el}} = \frac{\pi^2}{2}\frac{Nk_{\mathrm{B}}^2}{\varepsilon_F}T\). At low temperature,</p>
+    <p data-k="k39">In a metal, the conduction electrons add their own heat capacity, linear in \(T\) (Section 7.3): \(C_{\text{el}} = \frac{\pi^2}{2}\frac{Nk_{\mathrm{B}}^2}{\varepsilon_F}T\). At low temperature,</p>
     <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle C = \gamma T + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^3 \)</span><span class="eqp">\( \displaystyle \Longrightarrow\; \frac{C}{T} = \gamma + \frac{12\pi^4 Nk_{\mathrm{B}}}{5T_D^3}\,T^2 \)</span></span></div>
-    <p>so a plot of \(C/T\) against \(T^2\) is a straight line: the intercept is the electronic coefficient \(\gamma\), and the slope gives \(T_D\).</p>
+    <p data-k="k40">so a plot of \(C/T\) against \(T^2\) is a straight line: the intercept is the electronic coefficient \(\gamma\), and the slope gives \(T_D\).</p>
   </div>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="ctCanvas" aria-label="C over T versus T squared for gold, silver and copper"></canvas></div>
-      <p class="cap">Lines use typical measured values of \(\gamma\) and \(T_D\), per mole. Intercept: electrons. Slope: phonons.</p>
+      <p class="cap" data-k="k41">Lines use typical measured values of \(\gamma\) and \(T_D\), per mole. Intercept: electrons. Slope: phonons.</p>
     </div>
     <div class="panel">
       <div class="ctl btns" role="group" aria-label="Metal" id="metBtns"></div>
       <dl class="stats">
-        <dt>\(\gamma\), measured</dt><dd id="gM">–</dd>
-        <dt>\(\gamma\), free electrons</dt><dd id="gF">–</dd>
-        <dt>Slope (phonons)</dt><dd id="gB">–</dd>
+        <dt data-k="k42">\(\gamma\), measured</dt><dd id="gM">–</dd>
+        <dt data-k="k43">\(\gamma\), free electrons</dt><dd id="gF">–</dd>
+        <dt data-k="k44">Slope (phonons)</dt><dd id="gB">–</dd>
         <dt>\(T_D\)</dt><dd id="gTD">–</dd>
         <dt class="sep"></dt>
-        <dt>Electrons = phonons at</dt><dd id="gX">–</dd>
+        <dt data-k="k45">Electrons = phonons at</dt><dd id="gX">–</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">Below that temperature the electrons dominate, above it the phonons. The free-electron \(\gamma\) uses \(\varepsilon_F\) from the free-electron model; the real value is somewhat larger.</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k46">Below that temperature the electrons dominate, above it the phonons. The free-electron \(\gamma\) uses \(\varepsilon_F\) from the free-electron model; the real value is somewhat larger.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ MAGNONS ============ -->
 <section id="magnons" aria-labelledby="h-magnons">
-  <h2 id="h-magnons">Magnons in a ferromagnet</h2>
+  <h2 id="h-magnons" data-k="k47">Magnons in a ferromagnet</h2>
   <div class="prose">
-    <p>Problem 7.64. In a ferromagnet such as iron, each elementary dipole strongly prefers to align with its neighbors. At \(T = 0\) all are lined up and the magnetization is about \(2\mu_B N\). At somewhat higher temperatures the excitations are <strong>spin waves</strong>, in which the dipoles precess in cones with a phase that advances along the crystal. Their quanta, <strong>magnons</strong>, each reduce the magnetization by about \(2\mu_B\).</p>
+    <p data-k="k48">Problem 7.64. In a ferromagnet such as iron, each elementary dipole strongly prefers to align with its neighbors. At \(T = 0\) all are lined up and the magnetization is about \(2\mu_B N\). At somewhat higher temperatures the excitations are <strong>spin waves</strong>, in which the dipoles precess in cones with a phase that advances along the crystal. Their quanta, <strong>magnons</strong>, each reduce the magnetization by about \(2\mu_B\).</p>
   </div>
   <div class="canvas-holder" style="margin-top:1.25rem"><canvas id="spinCanvas" aria-label="The ground state of a ferromagnet and a spin wave of precessing dipoles"></canvas></div>
   <div class="legend">
-    <label class="ctl" for="spinL" style="flex:1 1 18rem;margin:0"><span class="lt">Wavelength, in atomic spacings</span> <output id="spinLOut"></output>
+    <label class="ctl" for="spinL" style="flex:1 1 18rem;margin:0"><span data-k="k49"><span class="lt">Wavelength, in atomic spacings</span></span> <output id="spinLOut"></output>
       <input type="range" id="spinL" min="4" max="24" step="1" value="10"></label>
     <button type="button" id="spinPlay">Pause</button>
   </div>
   <div class="prose" style="margin-top:1.5rem">
-    <p>A long-wavelength spin wave costs little energy, because neighboring dipoles differ only slightly in direction. Unlike sound, the frequency goes as the <em>square</em> of \(1/\lambda\), so (watch the animation) shortening the wavelength speeds the precession up quadratically, and \(\varepsilon = p^2/2m^*\), with \(m^* = 1.24 \times 10^{-29}\ \mathrm{kg}\) for iron, about 14 electron masses. Magnons have only one polarization. At low temperature,</p>
+    <p data-k="k50">A long-wavelength spin wave costs little energy, because neighboring dipoles differ only slightly in direction. Unlike sound, the frequency goes as the <em>square</em> of \(1/\lambda\), so (watch the animation) shortening the wavelength speeds the precession up quadratically, and \(\varepsilon = p^2/2m^*\), with \(m^* = 1.24 \times 10^{-29}\ \mathrm{kg}\) for iron, about 14 electron masses. Magnons have only one polarization. At low temperature,</p>
     <div class="eq multi"><span class="eqp">\( \displaystyle \frac{N_m}{V} = 2\pi\left(\frac{2m^*k_{\mathrm{B}}T}{h^2}\right)^{3/2}\int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx, \)</span><span class="eqp">\( \displaystyle \int_0^\infty\frac{\sqrt{x}}{e^x-1}\,dx \approx 2.31516 \)</span></div>
     <div class="eq multi"><span class="eqp">\( \displaystyle \frac{M(0)-M(T)}{M(0)} = \left(\frac{T}{T_0}\right)^{3/2}, \)</span><span class="eqp">\( \displaystyle \frac{C_V}{Nk_{\mathrm{B}}} = \left(\frac{T}{T_1}\right)^{3/2}, \)</span><span class="eqp">\( \displaystyle \frac{T_1}{T_0} = \left(\frac{2\pi \times 2.31516}{5\pi \times 1.78329}\right)^{2/3} \approx 0.646 \)</span></div>
-    <p>using \(\int_0^\infty x^{3/2}/(e^x-1)\,dx \approx 1.78329\). For iron, \(T_0 \approx 4200\ \mathrm{K}\) and \(T_1 \approx 2700\ \mathrm{K}\), so the magnetization drops only slowly at room temperature. Compare the magnon and phonon heat capacities (iron’s \(T_D = 470\ \mathrm{K}\)):</p>
+    <p data-k="k51">using \(\int_0^\infty x^{3/2}/(e^x-1)\,dx \approx 1.78329\). For iron, \(T_0 \approx 4200\ \mathrm{K}\) and \(T_1 \approx 2700\ \mathrm{K}\), so the magnetization drops only slowly at room temperature. Compare the magnon and phonon heat capacities (iron’s \(T_D = 470\ \mathrm{K}\)):</p>
   </div>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="feCanvas" aria-label="Magnon and phonon heat capacities of iron versus temperature, on logarithmic axes"></canvas></div>
-      <div class="legend">
+      <div class="legend" data-k="k52">
         <span><span class="swatch line" style="background:var(--magnon)"></span>Magnons, \((T/T_1)^{3/2}\)</span>
         <span><span class="swatch line" style="background:var(--debye)"></span>Phonons, full Debye formula</span>
         <span><span class="swatch dash" style="border-color:var(--approx)"></span>Phonons, low-\(T\) law</span>
@@ -299,27 +317,27 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     </div>
     <div class="panel">
       <div class="ctl">
-        <label for="feT"><span class="lt">Temperature \(T\)</span> <output id="feTOut"></output></label>
+        <label for="feT"><span data-k="k53"><span class="lt">Temperature \(T\)</span></span> <output id="feTOut"></output></label>
         <input type="range" id="feT" min="-1" max="3" step="0.01" value="2.477">
       </div>
       <dl class="stats">
-        <dt>Magnetization lost, \((T/T_0)^{3/2}\)</dt><dd id="feM">–</dd>
+        <dt data-k="k54">Magnetization lost, \((T/T_0)^{3/2}\)</dt><dd id="feM">–</dd>
         <dt class="sep"></dt>
         <dt style="grid-column:1/-1;color:var(--ink);font-weight:500">\(C_V/Nk_{\mathrm{B}}\)</dt>
-        <dt>Magnons</dt><dd id="feCm">–</dd>
-        <dt>Phonons (Debye)</dt><dd id="feCp">–</dd>
-        <dt>Phonons (low-\(T\) law)</dt><dd id="feCl">–</dd>
+        <dt data-k="k55">Magnons</dt><dd id="feCm">–</dd>
+        <dt data-k="k56">Phonons (Debye)</dt><dd id="feCp">–</dd>
+        <dt data-k="k57">Phonons (low-\(T\) law)</dt><dd id="feCl">–</dd>
         <dt class="sep"></dt>
-        <dt>Phonons ÷ magnons</dt><dd id="feR">–</dd>
+        <dt data-k="k58">Phonons ÷ magnons</dt><dd id="feR">–</dd>
       </dl>
-      <p class="cap" id="feNote" style="margin:.75rem 0 0">* The low-\(T\) law only holds well below \(T_D\), roughly under 0.1 \(T_D\) ≈ 47 K, so its value here is not physical.</p>
+      <p class="cap" id="feNote" style="margin:.75rem 0 0" data-k="k59">* The low-\(T\) law only holds well below \(T_D\), roughly under 0.1 \(T_D\) ≈ 47 K, so its value here is not physical.</p>
     </div>
   </div>
-  <p class="prose note" style="margin-top:1.25rem">At 300 K, the low-temperature phonon formula gives \(C_V/Nk_{\mathrm{B}} \approx 61\), as in the lecture, but 300 K is \(0.64\,T_D\), outside that formula’s range; the full Debye formula gives about 2.7. Either way phonons win by a wide margin, while magnons give \(1/27\). Magnons would only take over below about 2 K, and in iron the conduction electrons dominate there anyway.</p>
+  <p class="prose note" style="margin-top:1.25rem" data-k="k60">At 300 K, the low-temperature phonon formula gives \(C_V/Nk_{\mathrm{B}} \approx 61\), as in the lecture, but 300 K is \(0.64\,T_D\), outside that formula’s range; the full Debye formula gives about 2.7. Either way phonons win by a wide margin, while magnons give \(1/27\). Magnons would only take over below about 2 K, and in iron the conduction electrons dominate there anyway.</p>
 
-  <h3>No magnetization in two dimensions</h3>
+  <h3 data-k="k61">No magnetization in two dimensions</h3>
   <div class="prose">
-    <p>For a two-dimensional array of dipoles, the magnon count becomes \(N_m \propto \int_0 dx/(e^x - 1)\), which diverges at small \(x\), that is, for the longest wavelengths. The number of magnons, and so the reduction in magnetization, grows without bound as the system gets larger: no spontaneous magnetization at any finite temperature in 2D, at least in this model. (The Ising model in Section 8.2 is a two-dimensional model in which magnetization does occur.) The lower limit \(x_{\min}\) shrinks as the system grows, roughly as \(1/L^2\):</p>
+    <p data-k="k62">For a two-dimensional array of dipoles, the magnon count becomes \(N_m \propto \int_0 dx/(e^x - 1)\), which diverges at small \(x\), that is, for the longest wavelengths. The number of magnons, and so the reduction in magnetization, grows without bound as the system gets larger: no spontaneous magnetization at any finite temperature in 2D, at least in this model. (The Ising model in Section 8.2 is a two-dimensional model in which magnetization does occur.) The lower limit \(x_{\min}\) shrinks as the system grows, roughly as \(1/L^2\):</p>
   </div>
   <div class="fig">
     <div>
@@ -331,15 +349,15 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     </div>
     <div class="panel">
       <div class="ctl">
-        <label for="xmin"><span class="lt">Cutoff \(x_{\min}\)</span> <output id="xminOut"></output></label>
+        <label for="xmin"><span data-k="k63"><span class="lt">Cutoff \(x_{\min}\)</span></span> <output id="xminOut"></output></label>
         <input type="range" id="xmin" min="-8" max="0" step="0.05" value="-2">
-        <small>Smaller cutoff means a bigger system.</small>
+        <span data-k="k64"><small>Smaller cutoff means a bigger system.</small></span>
       </div>
       <dl class="stats">
-        <dt>3D integral</dt><dd id="i3">–</dd>
-        <dt>2D integral</dt><dd id="i2">–</dd>
+        <dt data-k="k65">3D integral</dt><dd id="i3">–</dd>
+        <dt data-k="k66">2D integral</dt><dd id="i2">–</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">The 3D integral settles at 2.31516; the 2D one equals \(-\ln(1 - e^{-x_{\min}})\) and keeps growing like \(\ln(1/x_{\min})\).</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k67">The 3D integral settles at 2.31516; the 2D one equals \(-\ln(1 - e^{-x_{\min}})\) and keeps growing like \(\ln(1/x_{\min})\).</p>
     </div>
   </div>
 </section>
@@ -347,8 +365,8 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
 
 <footer>
   <div class="wrap">
-    <p>Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.5, Debye Theory of Solids, with Problem 7.64).</p>
-    <p>Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(R = 8.314\ \mathrm{J/(mol\,K)}\). Material values are typical handbook values. Equations typeset with MathJax.</p>
+    <p data-k="k68">Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.5, Debye Theory of Solids, with Problem 7.64).</p>
+    <p data-k="k69">Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(R = 8.314\ \mathrm{J/(mol\,K)}\). Material values are typical handbook values. Equations typeset with MathJax.</p>
   </div>
 </footer>
 
@@ -363,8 +381,8 @@ function readColors(){
   ['bg','surface','ink','muted','rule','band','debye','einstein','approx','res','magnon','warn'].forEach(k => C[k] = cs.getPropertyValue('--'+k).trim());
 }
 readColors();
-const SANS = '"Instrument Sans", system-ui, sans-serif';
-const SERIF = '"Newsreader", Georgia, serif';
+const SANS = '"Instrument Sans", "IBM Plex Sans KR", system-ui, sans-serif';
+const SERIF = '"Newsreader", "IBM Plex Sans KR", Georgia, serif';
 function fit(cv, LW, LH){
   const w = cv.parentElement.clientWidth || LW, hgt = w*LH/LW;
   cv.style.height = hgt + 'px';
@@ -437,21 +455,21 @@ function chainDraw(){
   c.strokeStyle=C.muted; c.lineWidth=1.2; c.beginPath(); c.moveTo(x0, yc); pos.forEach(p => c.lineTo(p[0],p[1])); c.lineTo(x1, yc); c.stroke();
   c.fillStyle=C.ink; pos.forEach(p => { c.beginPath(); c.arc(p[0],p[1],6,0,7); c.fill(); });
   c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='left';
-  c.fillText('12 atoms, fixed ends (transverse motion shown)', x0-10, H-14);
+  c.fillText(tr('12 atoms, fixed ends (transverse motion shown)','원자 12개, 양 끝 고정 (가로 운동을 표시)'), x0-10, H-14);
 }
 function chainInfo(){
   const n = CH.n;
   $('modeNOut').textContent = n;
   const lamA = 2*(NAT+1)/n;
-  $('chainLam').innerHTML = lamA.toFixed(2) + ' spacings';
+  $('chainLam').innerHTML = lamA.toFixed(2) + tr(' spacings',' 간격');
   const mEq = n <= NAT ? n : 2*(NAT+1) - n;
-  $('chainE').innerHTML = n === NAT+1 ? 'no motion' : n <= NAT ? n + ' × <i>hc<sub>s</sub></i>/2<i>L</i>' : 'same as mode ' + mEq;
+  $('chainE').innerHTML = n === NAT+1 ? tr('no motion','움직임 없음') : n <= NAT ? n + ' × <i>hc<sub>s</sub></i>/2<i>L</i>' : tr('same as mode ' + mEq, '모드 ' + mEq + '와 같음');
   let v;
-  if (n <= NAT) v = n === 1 ? 'The lowest mode: the whole row moves together, so it has the lowest frequency and the smallest energy unit.' : n === NAT ? 'The highest mode: each atom moves opposite to its neighbors. Its wavelength is about twice the atomic spacing, the shortest possible.' : 'Mode ' + n + ' of ' + NAT + '. Higher modes have shorter wavelengths, higher frequencies, and larger energy units.';
-  else if (n === NAT+1) v = 'Every atom sits exactly at a node: this “mode” moves nothing at all.';
-  else v = 'Not a new mode. The red wave is too short to be sampled by the atoms; they move exactly as in mode ' + (2*(NAT+1)-n) + ' (teal). Wavelengths shorter than twice the spacing are not possible.';
+  if (n <= NAT) v = n === 1 ? tr('The lowest mode: the whole row moves together, so it has the lowest frequency and the smallest energy unit.','가장 낮은 모드: 한 줄 전체가 함께 움직이므로 진동수가 가장 낮고 에너지 단위가 가장 작습니다.') : n === NAT ? tr('The highest mode: each atom moves opposite to its neighbors. Its wavelength is about twice the atomic spacing, the shortest possible.','가장 높은 모드: 원자마다 이웃과 반대로 움직입니다. 파장은 원자 간격의 약 두 배로, 가능한 가장 짧은 파장입니다.') : tr('Mode ' + n + ' of ' + NAT + '. Higher modes have shorter wavelengths, higher frequencies, and larger energy units.', NAT + '개 가운데 모드 ' + n + '. 높은 모드일수록 파장이 짧고, 진동수가 높고, 에너지 단위가 큽니다.');
+  else if (n === NAT+1) v = tr('Every atom sits exactly at a node: this “mode” moves nothing at all.','모든 원자가 정확히 마디에 있습니다: 이 “모드”는 아무것도 움직이지 않습니다.');
+  else v = tr('Not a new mode. The red wave is too short to be sampled by the atoms; they move exactly as in mode ' + (2*(NAT+1)-n) + ' (teal). Wavelengths shorter than twice the spacing are not possible.', '새로운 모드가 아닙니다. 빨간 파동은 원자들이 표본으로 담기에 너무 짧아서, 원자들은 정확히 모드 ' + (2*(NAT+1)-n) + '(청록)처럼 움직입니다. 간격의 두 배보다 짧은 파장은 불가능합니다.');
   $('chainVerdict').textContent = v;
-  $('chainPlay').textContent = CH.running ? 'Pause' : 'Play';
+  $('chainPlay').textContent = CH.running ? tr('Pause','일시 정지') : tr('Play','재생');
 }
 $('modeN').addEventListener('input', e => { CH.n = +e.target.value; chainInfo(); chainDraw(); });
 $('chainPlay').addEventListener('click', () => { CH.running = !CH.running; CH.last = performance.now(); chainInfo(); });
@@ -506,7 +524,7 @@ function sphInfo(){
   const a = cCube(t), b = cDebye(t);
   $('sphCube').textContent = a.toFixed(4); $('sphSph').textContent = b.toFixed(4);
   $('sphDiff').textContent = (Math.abs(b-a)/Math.max(b,1e-12)*100).toFixed(1) + '%';
-  $('sphSpin').textContent = SV.spinning ? 'Pause rotation' : 'Rotate';
+  $('sphSpin').textContent = SV.spinning ? tr('Pause rotation','회전 멈춤') : tr('Rotate','회전');
 }
 $('sphT').addEventListener('input', e => { SV.t = Math.pow(10, +e.target.value); sphInfo(); sphDraw(); });
 $('sphSpin').addEventListener('click', () => { SV.spinning = !SV.spinning; sphInfo(); });
@@ -517,12 +535,14 @@ const endDrag = () => { SV.drag = null; }; sCv.addEventListener('pointerup', end
 sCv.addEventListener('keydown', e => { const k = {ArrowLeft:[0.1,0], ArrowRight:[-0.1,0], ArrowUp:[0,-0.08], ArrowDown:[0,0.08]}[e.key]; if (!k) return; e.preventDefault(); SV.yaw += k[0]; SV.pitch = Math.max(-0.2, Math.min(1.35, SV.pitch + k[1])); sphDraw(); });
 
 /* ================= DEBYE CURVE + MATERIALS ================= */
+const NM = {Lead:'납',Gold:'금',Silver:'은',Copper:'구리',Aluminum:'알루미늄',Iron:'철',Silicon:'규소',Diamond:'다이아몬드',Sodium:'나트륨',Potassium:'칼륨'};
+const mn = n => tr(n, NM[n]);
 const MATS = [
   {k:'Pb', name:'Lead', TD:88}, {k:'Au', name:'Gold', TD:165}, {k:'Ag', name:'Silver', TD:225}, {k:'Cu', name:'Copper', TD:343},
   {k:'Al', name:'Aluminum', TD:428}, {k:'Fe', name:'Iron', TD:470}, {k:'Si', name:'Silicon', TD:645}, {k:'C', name:'Diamond', TD:1860}
 ];
 const MV = {mat:'Cu', T:300, log:false};
-$('matBtns').innerHTML = MATS.map(m => '<button type="button" data-mat="'+m.k+'">'+m.name+'</button>').join('');
+$('matBtns').innerHTML = MATS.map(m => '<button type="button" data-mat="'+m.k+'">'+mn(m.name)+'</button>').join('');
 document.querySelectorAll('[data-mat]').forEach(b => b.addEventListener('click', () => { MV.mat = b.dataset.mat; cvRender(); }));
 function cvRender(){
   const m = MATS.find(x => x.k === MV.mat), t = MV.T/m.TD;
@@ -531,7 +551,7 @@ function cvRender(){
   $('mTD').textContent = m.TD + ' K'; $('mRatio').textContent = t < 0.01 ? t.toExponential(1) : t.toFixed(3);
   const cd = 3*R*cDebye(t), c3 = 3*R*cT3(t);
   $('mC').innerHTML = (cd >= 0.01 ? cd.toPrecision(3) : sci(cd,2)) + ' J/(mol·K)';
-  $('mC3').innerHTML = (c3 > 3*R*3 ? 'not valid here' : (c3 >= 0.01 ? c3.toPrecision(3) : sci(c3,2)) + ' J/(mol·K)');
+  $('mC3').innerHTML = (c3 > 3*R*3 ? tr('not valid here','여기서는 성립하지 않음') : (c3 >= 0.01 ? c3.toPrecision(3) : sci(c3,2)) + ' J/(mol·K)');
   const c = cvCtx; if (!c) return;
   const W=640,H=400,L=56,Rm=16,T=18,B=48;
   c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
@@ -569,7 +589,7 @@ const METS = [
 ];
 const BETA = TD => 12*Math.pow(Math.PI,4)*R/(5*TD*TD*TD)*1e3; // mJ/(mol K^4)
 let metSel = 'Cu';
-$('metBtns').innerHTML = METS.map(m => '<button type="button" data-met="'+m.k+'">'+m.name+'</button>').join('');
+$('metBtns').innerHTML = METS.map(m => '<button type="button" data-met="'+m.k+'">'+mn(m.name)+'</button>').join('');
 document.querySelectorAll('[data-met]').forEach(b => b.addEventListener('click', () => { metSel = b.dataset.met; ctRender(); }));
 function ctRender(){
   const m = METS.find(x => x.k===metSel), b = BETA(m.TD);
@@ -594,11 +614,11 @@ function ctRender(){
     c.strokeStyle = sel ? C.debye : C.res; c.lineWidth = sel ? 3 : 1.8;
     c.beginPath(); c.moveTo(X(0), Y(mm.g)); c.lineTo(X(xmax), Y(mm.g + bb*xmax)); c.stroke();
     c.fillStyle = sel ? C.ink : C.muted; c.font=(sel?'600 ':'')+'13px '+SANS; c.textAlign='left';
-    c.fillText(mm.name, X(xmax)+6, Y(mm.g + bb*xmax)+4);
+    c.fillText(mn(mm.name), X(xmax)+6, Y(mm.g + bb*xmax)+4);
   });
   const sm = METS.find(x=>x.k===metSel);
   c.fillStyle=C.einstein; c.beginPath(); c.arc(X(0), Y(sm.g), 5, 0, 7); c.fill();
-  c.font='12px '+SANS; c.textAlign='left'; c.fillText('intercept γ', X(0)+10, Y(sm.g)+18);
+  c.font='12px '+SANS; c.textAlign='left'; c.fillText(tr('intercept γ','절편 γ'), X(0)+10, Y(sm.g)+18);
   c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
 }
 
@@ -609,7 +629,7 @@ function spinDraw(){
   const W=900,H=250; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
   const n = 18, x0 = 120, sp = (W - x0 - 30)/(n-1);
   c.fillStyle=C.muted; c.font='13px '+SANS; c.textAlign='left';
-  c.fillText('Ground state', 14, 58); c.fillText('Spin wave', 14, 176);
+  c.fillText(tr('Ground state','바닥 상태'), 14, 58); c.fillText(tr('Spin wave','스핀파'), 14, 176);
   // ground state arrows
   c.strokeStyle=C.ink; c.fillStyle=C.ink; c.lineWidth=2;
   for (let j=0;j<n;j++){ const x=x0+j*sp; c.beginPath(); c.moveTo(x,82); c.lineTo(x,36); c.stroke(); c.beginPath(); c.moveTo(x,30); c.lineTo(x-5,40); c.lineTo(x+5,40); c.closePath(); c.fill(); }
@@ -631,10 +651,10 @@ function spinDraw(){
   // wavelength brace
   const bx0 = x0, bx1 = x0 + Math.min(SW.lam, n-1)*sp;
   c.strokeStyle=C.muted; c.lineWidth=1.2; c.beginPath(); c.moveTo(bx0, 222); c.lineTo(bx0, 230); c.lineTo(bx1, 230); c.lineTo(bx1, 222); c.stroke();
-  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='center'; c.fillText(SW.lam <= n-1 ? 'one wavelength' : 'wavelength continues beyond the picture', (bx0+bx1)/2, 245);
+  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='center'; c.fillText(SW.lam <= n-1 ? tr('one wavelength','한 파장') : tr('wavelength continues beyond the picture','파장이 그림 밖으로 이어짐'), (bx0+bx1)/2, 245);
 }
 $('spinL').addEventListener('input', e => { SW.lam = +e.target.value; $('spinLOut').textContent = SW.lam; spinDraw(); });
-$('spinPlay').addEventListener('click', () => { SW.running = !SW.running; $('spinPlay').textContent = SW.running ? 'Pause' : 'Play'; });
+$('spinPlay').addEventListener('click', () => { SW.running = !SW.running; $('spinPlay').textContent = SW.running ? tr('Pause','일시 정지') : tr('Play','재생'); });
 
 /* ================= IRON: MAGNONS VS PHONONS ================= */
 const MSTAR = 1.24e-29, NFE = 7874/55.845e-3*6.02214076e23;
@@ -661,8 +681,8 @@ function feRender(){
   c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
   [0.1,1,10,100,1000].forEach(v => { c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.textAlign = v===1000 ? 'right' : 'center'; c.fillText(v + ' K', X(v), H-B+16); });
   c.textAlign='right'; for (let e=-9;e<=1;e+=2){ c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(Math.pow(10,e))); c.lineTo(W-Rm,Y(Math.pow(10,e))); c.stroke(); c.fillText(pow10(e), L-6, Y(Math.pow(10,e))+4); }
-  c.fillStyle=C.muted; rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / ','r'],['Nk','i'],['B','sub'],['  for iron','s']], 'left');
-  rich(c, W-Rm-4, H-10, 14, [['temperature (log scale)','s']], 'right');
+  c.fillStyle=C.muted; rich(c, L+8, T+14, 15, [['C','i'],['V','isub'],[' / ','r'],['Nk','i'],['B','sub'],[tr('  for iron','  (철)'),'s']], 'left');
+  rich(c, W-Rm-4, H-10, 14, [[tr('temperature (log scale)','온도 (로그 눈금)'),'s']], 'right');
   c.save(); c.beginPath(); c.rect(L,T,W-L-Rm,H-T-B); c.clip();
   const curve = (key, f, col, w, dash) => { const vals = sampled(key, 301, i => f(Math.pow(10, xlo+(xhi-xlo)*i/300)));
     c.strokeStyle=col; c.lineWidth=w; c.setLineDash(dash||[]); c.beginPath(); for (let i=0;i<=300;i++){ const tt=Math.pow(10, xlo+(xhi-xlo)*i/300); const y=Y(vals[i]); i?c.lineTo(X(tt),y):c.moveTo(X(tt),y); } c.stroke(); c.setLineDash([]); };
@@ -672,7 +692,7 @@ function feRender(){
   // crossover (independent of the slider, so found once)
   const tx = sampled('feCross', 1, () => { let lo=0.1, hi=50; for (let k=0;k<60;k++){ const mid=Math.sqrt(lo*hi); (cMag(mid) > cPh(mid)) ? lo=mid : hi=mid; } return Math.sqrt(lo*hi); })[0];
   c.fillStyle=C.ink; c.beginPath(); c.arc(X(tx), Y(cMag(tx)), 4, 0, 7); c.fill();
-  c.font='12px '+SANS; c.textAlign='left'; c.fillText('cross at ' + tx.toFixed(1) + ' K', X(tx)+8, Y(cMag(tx))+16);
+  c.font='12px '+SANS; c.textAlign='left'; c.fillText(tr('cross at ' + tx.toFixed(1) + ' K', tx.toFixed(1) + ' K에서 교차'), X(tx)+8, Y(cMag(tx))+16);
   c.strokeStyle=C.ink; c.globalAlpha=.4; c.lineWidth=1; c.beginPath(); c.moveTo(X(feT),T); c.lineTo(X(feT),H-B); c.stroke(); c.globalAlpha=1;
   c.restore();
   c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-Rm,H-B); c.stroke();
@@ -697,8 +717,8 @@ function divRender(){
   c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
   for (let e=-8;e<=0;e+=2){ c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(e),T); c.lineTo(X(e),H-B); c.stroke(); c.fillText(pow10(e), X(e), H-B+16); }
   c.textAlign='right'; [0,5,10,15,20].forEach(v => { c.strokeStyle=C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-Rm,Y(v)); c.stroke(); c.fillText(v, L-6, Y(v)+4); });
-  c.fillStyle=C.muted; rich(c, W-Rm-4, H-8, 14, [['cutoff ','s'],['x','i'],['min','sub'],['  (log scale; bigger system to the left)','s']], 'right');
-  rich(c, L+8, T+14, 14, [['number of magnons (relative)','s']], 'left');
+  c.fillStyle=C.muted; rich(c, W-Rm-4, H-8, 14, [[tr('cutoff ','차단 '),'s'],['x','i'],['min','sub'],[tr('  (log scale; bigger system to the left)','  (로그 눈금; 왼쪽일수록 큰 계)'),'s']], 'right');
+  rich(c, L+8, T+14, 14, [[tr('number of magnons (relative)','마그논 수 (상대값)'),'s']], 'left');
   const curve = (key, f, col) => { const vals = sampled(key, 201, i => f(Math.pow(10, xlo+(xhi-xlo)*i/200)));
     c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=200;i++){ const lv = xlo+(xhi-xlo)*i/200; const y=Y(vals[i]); i?c.lineTo(X(lv),y):c.moveTo(X(lv),y); } c.stroke(); };
   curve('divI3', i3, C.debye); curve('divI2', i2, C.warn);
@@ -721,6 +741,7 @@ function layout(){
   redrawAll();
 }
 function redrawAll(){ chainInfo(); chainDraw(); sphInfo(); sphDraw(); cvRender(); ctRender(); spinDraw(); feRender(); divRender(); }
+window.addEventListener('langchange', () => { document.querySelectorAll('[data-mat]').forEach(b => b.textContent = mn(MATS.find(x => x.k===b.dataset.mat).name)); document.querySelectorAll('[data-met]').forEach(b => b.textContent = mn(METS.find(x => x.k===b.dataset.met).name)); $('spinPlay').textContent = SW.running ? tr('Pause','일시 정지') : tr('Play','재생'); redrawAll(); });
 let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 80); });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); redrawAll(); });
 new MutationObserver(() => { readColors(); redrawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -736,7 +757,7 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 $('matT').value = Math.log10(MV.T).toFixed(3); $('feT').value = Math.log10(feT).toFixed(3);
-$('spinLOut').textContent = SW.lam; $('spinPlay').textContent = SW.running ? 'Pause' : 'Play';
+$('spinLOut').textContent = SW.lam; $('spinPlay').textContent = SW.running ? tr('Pause','일시 정지') : tr('Play','재생');
 layout();
 requestAnimationFrame(loop);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll);
@@ -749,13 +770,117 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll)
   const SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
   const MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
   const current = () => root.dataset.theme || (mq.matches ? "dark" : "light");
-  const sync = () => { const dark = current() === "dark", label = dark ? "Switch to light mode" : "Switch to dark mode";
+  const sync = () => { const dark = current() === "dark", label = dark ? tr("Switch to light mode","밝은 화면으로 전환") : tr("Switch to dark mode","어두운 화면으로 전환");
     btn.innerHTML = dark ? SUN : MOON; btn.setAttribute("aria-label", label); btn.title = label; };
   btn.addEventListener("click", () => { const next = current() === "dark" ? "light" : "dark"; root.dataset.theme = next;
     try { localStorage.setItem("netsci-theme", next); } catch (e) {} sync(); });
   mq.addEventListener("change", sync);
+  window.addEventListener("langchange", sync);
   sync();
 })();
 </script>
+<!-- lang-toggle:body -->
+<script>
+window.I18N_KO={
+"__title": "고체의 디바이 이론",
+"k1": "이상훈 교수의 강의 노트(7장 7.5절, 고체의 디바이 이론)를 바탕으로 Claude Opus 5.5가 만든 인터랙티브 데모",
+"k2": "고체의 디바이 이론",
+"k3": "결정 속 원자들은 따로따로 진동하지 않습니다: 음파를 이루며 함께 움직이고, 그 파동의 양자인 포논은 광자와 똑같이 보손입니다. 포논을 그렇게 다루면 모든 고체의 열용량이 낮은 온도에서 \\(T^3\\)처럼 줄어드는 이유가 설명됩니다.",
+"k4": "아인슈타인 모형이 맞지 않는 곳",
+"k5": "아인슈타인 모형은 고체를 독립된 양자 조화 진동자의 모임으로 보며, 진동자마다 에너지를 \\(\\varepsilon = hf\\) 단위로 저장합니다(\\(E_n = (n+\\tfrac12)\\hbar\\omega\\)). 진동자 하나는 \\(Z = 1/(1 - e^{-\\beta hf})\\), \\(\\bar{E} = hf/(e^{\\beta hf}-1)\\)입니다. 3차원에서 진동하는 원자 \\(N\\)개에 대해 \\(N \\to 3N\\)으로 바꾸면",
+"k6": "높은 온도에서는 에너지 등분배의 결과 \\(C_V \\to 3Nk_{\\mathrm{B}}\\)를 줍니다. 그러나 \\(T \\to 0\\)에서는 \\(C_V \\propto e^{-\\varepsilon/k_{\\mathrm{B}}T}/T^2\\)로 지수적으로 줄어든다고 예측하는데, 실험에서는 \\(C_V \\propto T^3\\)입니다. 문제는 결정 속 원자들이 독립적으로 진동하지 않는다는 데 있습니다. 많은 원자가 함께 움직이는 낮은 진동수 모드는 에너지 단위가 작아서, 높은 진동수 모드가 얼어붙은 뒤에도 아주 낮은 온도까지 살아 있습니다.",
+"k7": "결정 속의 음파",
+"k8": "결정의 모드는 전자기장의 모드와 비슷하지만 세 가지가 다릅니다. 음파는 음속 \\(c_s\\)(일정하다고 둠)로 퍼지고, 편광이 세 가지이며(가로 둘, 세로 하나: 지진학의 S파와 P파), 원자 간격의 두 배보다 짧은 파장을 가질 수 없습니다. 볼록한 부분마다 원자가 적어도 하나는 있어야 합니다. 양 끝이 고정된 원자 12개짜리 줄에서 확인해 보세요.",
+"k9": "<span class=\"lt\">모드 번호 \\(n\\)<\/span>",
+"k10": "<small>원자가 12개이면 서로 다른 모드도 12개뿐입니다. 12를 넘겨 보면 이유를 알 수 있습니다.<\/small>",
+"k11": "파장 \\(\\lambda = 2L/n\\)",
+"k12": "에너지 단위 \\(\\varepsilon = hc_s n/2L\\)",
+"k13": "각 모드는 단위 \\(\\varepsilon = hf = hc_s/\\lambda = hc_s n/2L\\)로 같은 간격의 에너지 준위를 가지며, \\(L\\)은 결정의 길이입니다. 3차원에서는 \\(n\\)이 벡터 \\(\\vec{n}\\)이 됩니다. 평형에서 단위의 평균 개수는 플랑크 분포 \\(\\bar{n}_{\\mathrm{Pl}} = 1/(e^{\\varepsilon/k_{\\mathrm{B}}T} - 1)\\)이며, \\(c \\to c_s\\)로 바꾸면 광자와 똑같습니다. 이 양자를 <strong>포논<\/strong>이라고 하며, \\(\\mu = 0\\)인 보손입니다. 전체 열에너지는",
+"k14": "이며, 3은 편광의 수입니다. 하지만 광자와 달리 모든 \\(\\vec{n}\\)이 허용되지는 않습니다.",
+"k15": "디바이의 공 모양 소",
+"k16": "\\(n\\)은 한 줄에 놓인 원자 수 \\(N^{1/3}\\)을 넘을 수 없으므로, 실제 합은 \\(n\\) 공간의 정육면체 \\([1, N^{1/3}]^3\\)에 대해 계산해야 합니다. 페터 디바이의 영리한 생각은 대신 전체 부피가 같은 \\(N\\)인 구의 8분의 1을 그 영역으로 삼는 것이었습니다:",
+"k17": "이것은 두 극한에서 모두 정확합니다. 높은 \\(T\\)에서는 모드의 전체 개수만 중요한데, 구는 이를 보존합니다. 낮은 \\(T\\)에서는 큰 \\(\\vec{n}\\)의 모드가 어차피 얼어붙어 있으므로 어떻게 세든 상관없습니다. 그림은 \\(8^3\\)개 모드의 정육면체이며, 밝기는 각 모드가 얼마나 활발한지(\\(C_V\\)에 대한 기여)를 나타냅니다.",
+"k18": "<span><span class=\"swatch dot\" style=\"background:var(--debye)\"><\/span>정육면체와 구 모두에 있음<\/span>\n        <span><span class=\"swatch dot\" style=\"background:var(--warn)\"><\/span>실제로 있지만 구에서 빠짐<\/span>\n        <span><span class=\"swatch dot\" style=\"background:var(--approx)\"><\/span>구가 더한 것<\/span>",
+"k19": "끌어서 돌리거나, 그림을 선택하고 화살표 키를 쓰세요. 흐린 점은 얼어붙은 모드입니다.",
+"k20": "\\(C_V/3Nk_{\\mathrm{B}}\\), 실제 정육면체",
+"k21": "\\(C_V/3Nk_{\\mathrm{B}}\\), 디바이 구",
+"k22": "차이",
+"k23": "두 영역 모두 거시적 결정처럼 연속체로 다루므로, 차이는 오직 모양에서 옵니다. 낮은 \\(T\\)에서는 사라지고, 높은 \\(T\\)에서는 작으며, \\(T \\approx 0.25\\,T_D\\) 근처에서 몇 퍼센트로 가장 큽니다.",
+"k24": "디바이 열용량",
+"k25": "\\(x = hc_s n/2Lk_{\\mathrm{B}}T\\)로 구의 8분의 1에 대해 적분하면 위끝은 \\(x_{\\max} = T_D/T\\)가 되며, 여기서",
+"k26": "는 디바이 온도입니다. 그러면",
+"k27": "\\(T \\gg T_D\\)이면 \\(x\\)가 항상 작아 \\(\\int x^3/(e^x-1)\\,dx \\approx \\int x^2\\,dx\\)이고, \\(U \\approx 3Nk_{\\mathrm{B}}T\\)로 에너지 등분배 및 아인슈타인 모형과 일치합니다. \\(T \\ll T_D\\)이면 위끝을 무한대로 보낼 수 있어 광자 기체에서처럼 \\(\\int_0^\\infty x^3/(e^x-1)\\,dx = \\pi^4/15\\)이고,",
+"k28": "\\(T^3\\) 법칙은 거의 모든 고체의 저온 실험과 훌륭하게 일치합니다. 그 사이 온도에서는 적분을 수치적으로 계산합니다.",
+"k29": "<span><span class=\"swatch line\" style=\"background:var(--debye)\"><\/span>디바이<\/span>\n        <span><span class=\"swatch dash\" style=\"border-color:var(--einstein)\"><\/span>아인슈타인, 높은 \\(T\\)에서 맞춘 \\(\\varepsilon\\)<\/span>\n        <span><span class=\"swatch dash\" style=\"border-color:var(--approx)\"><\/span>저온 법칙, \\(\\propto T^3\\)<\/span>",
+"k30": "로그 축",
+"k31": "<span class=\"lt\">온도 \\(T\\)<\/span>",
+"k32": "디바이 온도 \\(T_D\\)",
+"k33": "몰 \\(C_V\\), 디바이",
+"k34": "저온 법칙",
+"k35": "에너지 등분배, \\(3R\\)",
+"k36": "24.9 J/(mol·K)",
+"k37": "아인슈타인 곡선에서는 두 모형이 높은 온도에서 일치하도록 \\(\\varepsilon\\)을 골랐으며, 그러면 \\(\\varepsilon/k_{\\mathrm{B}} = \\sqrt{3/5}\\,T_D \\approx 0.77\\,T_D\\)입니다. 낮은 온도에서, 특히 로그 축에서 아인슈타인 곡선이 얼마나 더 평평한지 보세요. \\(T = T_D\\)에서 \\(C_V\\)가 최댓값의 95%에 이르므로, 디바이 온도는 에너지 등분배가 언제쯤 충분히 맞는지 대략 알려 줍니다. 대표적인 값은 납(무르고 무거움)의 88 K부터 다이아몬드(단단하고 가벼움)의 1860 K까지이며, 나머지도 보통의 핸드북 값입니다. 실제로는 \\(T_D\\)를 \\(c_s\\)에서 계산하기보다 측정한 열용량에 맞춰 정하는 경우가 많습니다.",
+"k38": "금속: 전자와 포논",
+"k39": "금속에서는 전도 전자가 \\(T\\)에 비례하는 열용량을 더합니다(7.3절): \\(C_{\\text{el}} = \\frac{\\pi^2}{2}\\frac{Nk_{\\mathrm{B}}^2}{\\varepsilon_F}T\\). 낮은 온도에서는",
+"k40": "이므로 \\(C/T\\)를 \\(T^2\\)에 대해 그리면 직선이 됩니다: 절편이 전자 계수 \\(\\gamma\\)이고, 기울기에서 \\(T_D\\)를 얻습니다.",
+"k41": "직선은 몰당 \\(\\gamma\\)와 \\(T_D\\)의 대표적인 측정값을 썼습니다. 절편: 전자. 기울기: 포논.",
+"k42": "\\(\\gamma\\), 측정값",
+"k43": "\\(\\gamma\\), 자유 전자",
+"k44": "기울기 (포논)",
+"k45": "전자 = 포논이 되는 온도",
+"k46": "그 온도보다 낮으면 전자가, 높으면 포논이 우세합니다. 자유 전자 \\(\\gamma\\)는 자유 전자 모형의 \\(\\varepsilon_F\\)를 썼으며, 실제 값은 이보다 조금 큽니다.",
+"k47": "강자성체의 마그논",
+"k48": "문제 7.64. 철 같은 강자성체에서는 기본 쌍극자 하나하나가 이웃과 같은 방향으로 정렬하려는 경향이 강합니다. \\(T = 0\\)에서는 모두 정렬해 있고 자화는 약 \\(2\\mu_B N\\)입니다. 온도가 조금 오르면 들뜸은 <strong>스핀파<\/strong>로, 쌍극자들이 원뿔을 그리며 세차 운동을 하고 그 위상이 결정을 따라 앞서 나갑니다. 그 양자인 <strong>마그논<\/strong>은 하나마다 자화를 약 \\(2\\mu_B\\)씩 줄입니다.",
+"k49": "<span class=\"lt\">파장, 원자 간격 단위<\/span>",
+"k50": "파장이 긴 스핀파는 이웃 쌍극자의 방향이 조금씩만 다르므로 에너지가 적게 듭니다. 음파와 달리 진동수가 \\(1/\\lambda\\)의 <em>제곱<\/em>에 비례하므로, 애니메이션에서 보듯 파장을 줄이면 세차 운동이 제곱으로 빨라지고, \\(\\varepsilon = p^2/2m^*\\)이며 철에서 \\(m^* = 1.24 \\times 10^{-29}\\ \\mathrm{kg}\\), 전자 질량의 약 14배입니다. 마그논의 편광은 하나뿐입니다. 낮은 온도에서는",
+"k51": "이며 \\(\\int_0^\\infty x^{3/2}/(e^x-1)\\,dx \\approx 1.78329\\)를 썼습니다. 철에서는 \\(T_0 \\approx 4200\\ \\mathrm{K}\\), \\(T_1 \\approx 2700\\ \\mathrm{K}\\)이므로 상온에서도 자화가 천천히만 줄어듭니다. 마그논과 포논의 열용량을 비교해 보세요(철의 \\(T_D = 470\\ \\mathrm{K}\\)):",
+"k52": "<span><span class=\"swatch line\" style=\"background:var(--magnon)\"><\/span>마그논, \\((T/T_1)^{3/2}\\)<\/span>\n        <span><span class=\"swatch line\" style=\"background:var(--debye)\"><\/span>포논, 디바이 공식 전체<\/span>\n        <span><span class=\"swatch dash\" style=\"border-color:var(--approx)\"><\/span>포논, 저온 법칙<\/span>",
+"k53": "<span class=\"lt\">온도 \\(T\\)<\/span>",
+"k54": "줄어든 자화, \\((T/T_0)^{3/2}\\)",
+"k55": "마그논",
+"k56": "포논 (디바이)",
+"k57": "포논 (저온 법칙)",
+"k58": "포논 ÷ 마그논",
+"k59": "* 저온 법칙은 \\(T_D\\)보다 훨씬 낮은 온도, 대략 0.1 \\(T_D\\) ≈ 47 K 아래에서만 잘 맞으므로 여기서의 값은 물리적 의미가 없습니다.",
+"k60": "300 K에서 저온 포논 공식은 강의에서처럼 \\(C_V/Nk_{\\mathrm{B}} \\approx 61\\)을 주지만, 300 K는 \\(0.64\\,T_D\\)로 그 공식이 성립하는 범위 밖입니다. 디바이 공식 전체로는 약 2.7입니다. 어느 쪽이든 포논이 큰 차이로 이기며, 마그논은 \\(1/27\\)입니다. 마그논이 우세해지는 것은 약 2 K 아래에서뿐이고, 철에서는 그 온도에서 어차피 전도 전자가 우세합니다.",
+"k61": "2차원에서는 자화가 없다",
+"k62": "쌍극자가 2차원으로 배열되면 마그논 수는 \\(N_m \\propto \\int_0 dx/(e^x - 1)\\)이 되며, 작은 \\(x\\), 곧 가장 긴 파장에서 발산합니다. 계가 커질수록 마그논 수와 그만큼의 자화 감소가 한없이 커집니다: 적어도 이 모형에서는 2차원에서 유한한 온도의 자발 자화가 없습니다. (8.2절의 이징 모형은 자화가 일어나는 2차원 모형입니다.) 아래끝 \\(x_{\\min}\\)은 계가 커질수록 대략 \\(1/L^2\\)처럼 줄어듭니다:",
+"k63": "<span class=\"lt\">차단 \\(x_{\\min}\\)<\/span>",
+"k64": "<small>차단이 작을수록 계가 큽니다.<\/small>",
+"k65": "3차원 적분",
+"k66": "2차원 적분",
+"k67": "3차원 적분은 2.31516에 자리 잡지만, 2차원 적분은 \\(-\\ln(1 - e^{-x_{\\min}})\\)과 같아 \\(\\ln(1/x_{\\min})\\)처럼 계속 커집니다.",
+"k68": "양자 통계에 관한 이상훈 교수의 강의 노트(7.5절, 고체의 디바이 이론, 문제 7.64 포함)를 바탕으로 Claude Opus 5.5가 만들었습니다.",
+"k69": "상수: \\(h = 6.626 \\times 10^{-34}\\ \\mathrm{J\\,s}\\), \\(k_{\\mathrm{B}} = 1.381 \\times 10^{-23}\\ \\mathrm{J/K}\\), \\(R = 8.314\\ \\mathrm{J/(mol\\,K)}\\). 물질 값은 보통의 핸드북 값입니다. 수식은 MathJax로 조판했습니다."
+};
+(function(){
+  // English / 한국어 switch shared by the course demos; the choice is remembered across pages
+  var KEY='lshlj82-demo-lang', root=document.documentElement, KO=window.I18N_KO||{}, EN={};
+  var els=[].slice.call(document.querySelectorAll('[data-k]'));
+  els.forEach(function(e){EN[e.getAttribute('data-k')]=e.innerHTML;});
+  var titleEN=document.title;
+  var btn=document.createElement('button');btn.id='langBtn';btn.type='button';document.body.appendChild(btn);
+  function typeset(list){
+    if(!list.length)return;
+    if(window.MathJax&&MathJax.typesetPromise){var go=function(){MathJax.typesetPromise(list).catch(function(){});};
+      if(MathJax.startup&&MathJax.startup.promise)MathJax.startup.promise.then(go);else go();}
+    if(window.renderMathInElement&&window.KATEX_OPTS)list.forEach(function(e){try{renderMathInElement(e,window.KATEX_OPTS)}catch(_){}}); 
+  }
+  function apply(l,first){
+    window.LANG=l;root.dataset.lang=l;root.lang=l;var changed=[];
+    els.forEach(function(e){var k=e.getAttribute('data-k'),s=(l==='ko'&&KO[k]!=null)?KO[k]:EN[k];if(e.innerHTML!==s){e.innerHTML=s;changed.push(e);}});
+    document.title=(l==='ko'&&KO.__title)?KO.__title:titleEN;
+    btn.textContent=l==='ko'?'EN':'한국어';btn.setAttribute('aria-label',l==='ko'?'View in English':'한국어로 보기');btn.title=btn.getAttribute('aria-label');
+    btn.setAttribute('lang',l==='ko'?'en':'ko');
+    if(!first)typeset(changed);
+    window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:l}}));
+    // canvases drawn before the Korean web font arrives are redrawn once it has loaded
+    if(l==='ko'&&document.fonts&&!document.fonts.check('16px "IBM Plex Sans KR"','가'))document.fonts.load('16px "IBM Plex Sans KR"','가').then(function(){if(window.LANG==='ko')window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:'ko'}}));}).catch(function(){});
+  }
+  btn.addEventListener('click',function(){var n=window.LANG==='ko'?'en':'ko';try{localStorage.setItem(KEY,n)}catch(e){}apply(n,false);});
+  apply(window.LANG||'en',true);
+})();
+</script>
+<!-- lang-toggle:body-end -->
 </body>
 </html>
